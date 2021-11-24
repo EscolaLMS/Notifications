@@ -2,7 +2,7 @@
 
 namespace EscolaLms\Notifications\Tests;
 
-use EscolaLms\Auth\AuthServiceProvider;
+use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Auth\Models\User;
 use EscolaLms\Notifications\EscolaLmsNotificationsServiceProvider;
 use EscolaLms\Templates\Database\Seeders\PermissionTableSeeder as TemplatesPermissionTableSeeder;
@@ -27,7 +27,7 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
             ...parent::getPackageProviders($app),
             PassportServiceProvider::class,
             PermissionServiceProvider::class,
-            AuthServiceProvider::class,
+            EscolaLmsAuthServiceProvider::class,
             EscolaLmsTemplatesServiceProvider::class,
             EscolaLmsNotificationsServiceProvider::class,
         ];
