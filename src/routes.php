@@ -1,6 +1,5 @@
 <?php
 
-use EscolaLms\Notifications\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'api/notifications'], function () {
