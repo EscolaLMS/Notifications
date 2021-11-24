@@ -73,7 +73,7 @@ trait NotificationDefaultImplementation
     public function title($notifiable, ?string $channel = null): string
     {
         $template = EscolaLmsNotifications::findTemplateForNotification($this, $channel);
-        $title = ($template && $template->title_is_valid) ? $template->title : $this->defaultTitle($channel);
+        $title = ($template && $template->title_is_valid) ? $template->title : $this->defaultTitle($notifiable, $channel);
 
         return EscolaLmsNotifications::replaceNotificationVariables($this, $title, $notifiable);
     }
