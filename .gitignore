@@ -1,9 +1,10 @@
-vendor/
-tags
-.phpunit.result.cache
-.idea/
-src/oa_version.php
+./.env
 ./phpunit.xml
 ./testbench.yaml
+.env
+.idea/
+.phpunit.result.cache
 composer.lock
-./.env
+src/oa_version.php
+tags
+vendor/
