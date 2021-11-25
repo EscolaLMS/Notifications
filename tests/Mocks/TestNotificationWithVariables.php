@@ -2,16 +2,16 @@
 
 namespace EscolaLms\Notifications\Tests\Mocks;
 
-use EscolaLms\Auth\Models\Group;
+use EscolaLms\Core\Models\User;
 use EscolaLms\Notifications\Core\NotificationAbstract;
 
 class TestNotificationWithVariables extends NotificationAbstract
 {
-    private Group $group;
+    private User $friend;
 
-    public function __construct(Group $group)
+    public function __construct(User $friend)
     {
-        $this->group = $group;
+        $this->friend = $friend;
     }
 
     public static function templateVariablesClass(): string
@@ -29,7 +29,7 @@ class TestNotificationWithVariables extends NotificationAbstract
     public function additionalDataForVariables(): array
     {
         return [
-            $this->group
+            $this->friend
         ];
     }
 

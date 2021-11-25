@@ -2,8 +2,7 @@
 
 namespace Tests\Feature;
 
-use EscolaLms\Auth\Models\Group;
-use EscolaLms\Auth\Models\User;
+use EscolaLms\Core\Models\User;
 use EscolaLms\Notifications\Facades\EscolaLmsNotifications;
 use EscolaLms\Notifications\Tests\Mocks\TestNotificationWithVariables;
 use EscolaLms\Notifications\Tests\Mocks\TestVariables;
@@ -18,7 +17,6 @@ class NotificationContractTest extends TestCase
     use DatabaseTransactions;
     use CreatesUsers;
 
-    public Group $group;
     public User $user;
 
     protected function setUp(): void
@@ -38,15 +36,15 @@ class NotificationContractTest extends TestCase
             $template->save();
         }
 
-        $this->group = Group::factory()->create();
         $this->user = $this->makeStudent();
+        $this->friend = $this->makeStudent();
     }
 
     public function test_sending_notification()
     {
         Notification::fake();
 
-        $notification = new TestNotificationWithVariables($this->group);
+        $notification = new TestNotificationWithVariables($this->friend);
         $this->user->notify($notification);
 
         Notification::assertSentTo($this->user, TestNotificationWithVariables::class);
@@ -54,7 +52,7 @@ class NotificationContractTest extends TestCase
 
     public function test_notification_contract()
     {
-        $notification = new TestNotificationWithVariables($this->group);
+        $notification = new TestNotificationWithVariables($this->friend);
 
         $array = $notification->toArray($this->user, null);
 
@@ -74,7 +72,7 @@ class NotificationContractTest extends TestCase
 
         $additional = $notification->additionalDataForVariables();
 
-        $this->assertEquals(Group::class, get_class($additional[0]));
-        $this->assertEquals($this->group->getKey(), $additional[0]->getKey());
+        $this->assertEquals(User::class, get_class($additional[0]));
+        $this->assertEquals($this->friend->getKey(), $additional[0]->getKey());
     }
 }

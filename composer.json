@@ -6,7 +6,6 @@
         "php": ">=7.4|>=8",
         "laravel/framework": ">=8.0",
         "escolalms/core": "^1",
-        "escolalms/auth": "^0",
         "escolalms/templates": "^0"
     },
     "require-dev": {

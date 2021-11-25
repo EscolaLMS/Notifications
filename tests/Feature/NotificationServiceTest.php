@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use EscolaLms\Auth\Models\Group;
 use EscolaLms\Notifications\Facades\EscolaLmsNotifications;
 use EscolaLms\Notifications\Tests\Mocks\TestNotificationWithVariables;
 use EscolaLms\Notifications\Tests\Mocks\TestVariables;
@@ -31,22 +30,22 @@ class NotificationServiceTest extends TestCase
 
     public function test_replace_notification_variables()
     {
-        $group = Group::factory()->create();
         $user = $this->makeStudent();
+        $friend = $this->makeStudent();
 
         EscolaLmsNotifications::registerNotification(TestNotificationWithVariables::class);
 
-        $notification = new TestNotificationWithVariables($group);
-        $content = "email:" . TestVariables::STUDENT_EMAIL . PHP_EOL . 'group:' . TestVariables::STUDENT_GROUP;
+        $notification = new TestNotificationWithVariables($friend);
+        $content = "email:" . TestVariables::STUDENT_EMAIL . PHP_EOL . 'friend:' . TestVariables::FRIEND_EMAIL;
         $replaced_content = EscolaLmsNotifications::replaceNotificationVariables($notification, $content, $user);
 
-        $this->assertEquals("email:" . $user->email . PHP_EOL . "group:" . $group->name, $replaced_content);
+        $this->assertEquals("email:" . $user->email . PHP_EOL . "friend:" . $friend->email, $replaced_content);
     }
 
     public function test_find_template_for_notification()
     {
-        $group = Group::factory()->create();
         $user = $this->makeStudent();
+        $friend = $this->makeStudent();
 
         EscolaLmsNotifications::registerNotification(TestNotificationWithVariables::class);
 
@@ -58,7 +57,7 @@ class NotificationServiceTest extends TestCase
             'title' => "title:" . TestVariables::STUDENT_EMAIL,
         ]);
 
-        $notification = new TestNotificationWithVariables($group);
+        $notification = new TestNotificationWithVariables($friend);
 
         $template_found = EscolaLmsNotifications::findTemplateForNotification($notification, 'mail');
 
