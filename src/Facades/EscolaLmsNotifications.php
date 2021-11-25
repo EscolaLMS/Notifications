@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static void          registerNotification(string $notificationsClass)
- * @method static Template|null findTemplateForNotification(NotificationContract $notification, ?string $channel = 'mail')
+ * @method static Template|null findTemplateForNotification(NotificationContract $notification, ?string $channel = null)
  * @method static string        replaceNotificationVariables(NotificationContract $notification, string $content, $notifiable)
  * 
  * @see \EscolaLms\Notifications\Services\NotificationsService

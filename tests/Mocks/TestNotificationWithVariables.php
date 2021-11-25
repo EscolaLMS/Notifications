@@ -19,10 +19,12 @@ class TestNotificationWithVariables extends NotificationAbstract
         return TestVariables::class;
     }
 
+    /*
     public static function templateVariablesSetName(): string
     {
         return 'notification-with-variables';
     }
+    */
 
     public function additionalDataForVariables(): array
     {
@@ -31,12 +33,12 @@ class TestNotificationWithVariables extends NotificationAbstract
         ];
     }
 
-    protected function defaultTitle($notifiable, ?string $channel = null): string
+    public static function defaultTitleTemplate(): string
     {
         return "default-title:" . TestVariables::STUDENT_EMAIL;
     }
 
-    protected function defaultContent($notifiable, ?string $channel = null): string
+    public static function defaultContentTemplate(): string
     {
         return "default-content:" . TestVariables::STUDENT_EMAIL;
     }

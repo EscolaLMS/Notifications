@@ -10,6 +10,8 @@ interface NotificationContract
 {
     public static function templateVariablesClass(): string;
     public static function templateVariablesSetName(): string;
+    public static function defaultTitleTemplate(): string;
+    public static function defaultContentTemplate(): string;
     public static function availableVia(): array;
 
     public function via($notifiable): array;

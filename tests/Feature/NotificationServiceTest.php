@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use EscolaLms\Auth\Models\Group;
 use EscolaLms\Notifications\Facades\EscolaLmsNotifications;
-use EscolaLms\Notifications\Tests\Mocks\TestNotificationWithoutVariables;
 use EscolaLms\Notifications\Tests\Mocks\TestNotificationWithVariables;
 use EscolaLms\Notifications\Tests\Mocks\TestVariables;
 use EscolaLms\Notifications\Tests\TestCase;
@@ -21,13 +20,12 @@ class NotificationServiceTest extends TestCase
     public function test_register_notification()
     {
         EscolaLmsNotifications::registerNotification(TestNotificationWithVariables::class);
-        EscolaLmsNotifications::registerNotification(TestNotificationWithoutVariables::class);
 
         /** @var VariablesServiceContract $variablesService */
         $variablesService = app(VariablesServiceContract::class);
         $availableTokens = $variablesService->getAvailableTokens();
         foreach (TestNotificationWithVariables::availableVia() as $channel) {
-            $this->assertEquals(TestVariables::getValues(), $availableTokens[$channel]['notification-with-variables']);
+            $this->assertEquals(TestVariables::getValues(), $availableTokens[$channel][TestNotificationWithVariables::templateVariablesSetName()]);
         }
     }
 

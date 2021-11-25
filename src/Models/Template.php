@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Notifications\Models;
 
+use EscolaLms\Notifications\Database\Factories\TemplateFactory;
 use EscolaLms\Templates\Models\Template as BaseTemplate;
 use EscolaLms\Templates\Services\Contracts\TemplateServiceContract;
 
@@ -29,6 +30,24 @@ class Template extends BaseTemplate
         'mail_theme',
         'mail_markdown',
     ];
+
+    protected static function booted()
+    {
+        self::saved(function (Template $template) {
+            if ($template->is_default) {
+                Template::where($template->getKeyName(), '!=', $template->getKey())
+                    ->where([
+                        'type' => $template->type,
+                        'vars_set' => $template->vars_set,
+                    ])->update(['is_default' => false]);
+            }
+        });
+    }
+
+    protected static function newFactory()
+    {
+        return TemplateFactory::new();
+    }
 
     public function getTitleIsValidAttribute(): bool
     {

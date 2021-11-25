@@ -28,13 +28,14 @@ class NotificationContractTest extends TestCase
         EscolaLmsNotifications::registerNotification(TestNotificationWithVariables::class);
 
         foreach (TestNotificationWithVariables::availableVia() as $channel) {
-            Template::factory()->create([
+            $template = Template::factory()->make([
                 'type' => $channel,
                 'vars_set' => TestNotificationWithVariables::templateVariablesSetName(),
                 'is_default' => true,
                 'content' => $channel . "-content:" . TestVariables::STUDENT_EMAIL,
                 'title' => $channel . "-title:" . TestVariables::STUDENT_EMAIL,
             ]);
+            $template->save();
         }
 
         $this->group = Group::factory()->create();

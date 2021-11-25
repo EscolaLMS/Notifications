@@ -7,8 +7,8 @@ use EscolaLms\Notifications\Models\Template;
 use EscolaLms\Notifications\Repositories\Contracts\TemplateRepositoryContract;
 use EscolaLms\Notifications\Services\Contracts\NotificationsServiceContract;
 use EscolaLms\Templates\Services\Contracts\VariablesServiceContract;
-use Illuminate\Support\Facades\Cache;
 use InvalidArgumentException;
+use ReflectionClass;
 
 class NotificationsService implements NotificationsServiceContract
 {
@@ -25,23 +25,45 @@ class NotificationsService implements NotificationsServiceContract
 
     public function registerNotification(string $notificationClass): void
     {
-        /** @var NotificationContract $notificationClass */
+        /** @var NotificationContract|string $notificationClass */
         if (!is_a($notificationClass, NotificationContract::class, true)) {
-            throw new InvalidArgumentException("Notification must implement Notification Contract");
+            throw new InvalidArgumentException("Notification Class must implement Notification Contract");
+        }
+        $class = new ReflectionClass($notificationClass);
+        if ($class->isAbstract()) {
+            throw new InvalidArgumentException("Notification Class must not be Abstract");
         }
 
         $this->notifications[] = $notificationClass;
         foreach ($notificationClass::availableVia() as $notificationRoute) {
             $this->variablesService::addToken($notificationClass::templateVariablesClass(), $notificationRoute, $notificationClass::templateVariablesSetName());
+
+            $template = $this->findTemplateForNotificationClass($notificationClass, $notificationRoute);
+            if (is_null($template)) {
+                $this->templateRepository->create([
+                    'is_default' => true,
+                    'name' => $notificationRoute . ':' . $notificationClass::templateVariablesSetName(),
+                    'type' => $notificationRoute,
+                    'vars_set' => $notificationClass::templateVariablesSetName(),
+                    'title' => $notificationClass::defaultTitleTemplate(),
+                    'content' => $notificationClass::defaultContentTemplate(),
+                ]);
+            }
         }
     }
 
-    public function findTemplateForNotification(NotificationContract $notification, ?string $channel = 'mail'): ?Template
+    private function findTemplateForNotificationClass(string $notificationClass, ?string $channel = null): ?Template
     {
-        if (is_null($channel) || !in_array($channel, $notification::availableVia())) {
+        /** @var NotificationContract|string $notificationClass */
+        if (is_null($channel) || !in_array($channel, $notificationClass::availableVia())) {
             return null;
         }
-        return $this->templateRepository->findDefaultForTypeAndSubtype($channel, $notification::templateVariablesSetName());
+        return $this->templateRepository->findDefaultForTypeAndSubtype($channel, $notificationClass::templateVariablesSetName());
+    }
+
+    public function findTemplateForNotification(NotificationContract $notification, ?string $channel = null): ?Template
+    {
+        return $this->findTemplateForNotificationClass(get_class($notification), $channel);
     }
 
     public function replaceNotificationVariables(NotificationContract $notification, string $content, $notifiable): string

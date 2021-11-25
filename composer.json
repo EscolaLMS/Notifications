@@ -24,6 +24,7 @@
         "psr-4": {
             "EscolaLms\\Notifications\\": "src",
             "EscolaLms\\Notifications\\Database\\Seeders\\": "database/seeders",
+            "EscolaLms\\Notifications\\Database\\Factories\\": "database/factories",
             "EscolaLms\\Notifications\\Tests\\": "tests"
         }
     },

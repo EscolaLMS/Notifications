@@ -7,7 +7,6 @@ use EscolaLms\Notifications\Facades\EscolaLmsNotifications;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\DatabaseMessage;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -20,7 +19,7 @@ trait NotificationDefaultImplementation
 
     public static function templateVariablesSetName(): string
     {
-        return Str::snake(class_basename(self::class));
+        return Str::snake(class_basename(static::class));
     }
 
     public static function availableVia(): array
@@ -73,7 +72,7 @@ trait NotificationDefaultImplementation
     public function title($notifiable, ?string $channel = null): string
     {
         $template = EscolaLmsNotifications::findTemplateForNotification($this, $channel);
-        $title = ($template && $template->title_is_valid) ? $template->title : $this->defaultTitle($notifiable, $channel);
+        $title = ($template && $template->title_is_valid) ? $template->title : static::defaultTitleTemplate();
 
         return EscolaLmsNotifications::replaceNotificationVariables($this, $title, $notifiable);
     }
@@ -81,18 +80,14 @@ trait NotificationDefaultImplementation
     public function content($notifiable, ?string $channel = null): string
     {
         $template = EscolaLmsNotifications::findTemplateForNotification($this, $channel);
-        $content = ($template && $template->is_valid) ? $template->content : $this->defaultContent($notifiable, $channel);
+        $content = ($template && $template->is_valid) ? $template->content : static::defaultContentTemplate();
 
         return EscolaLmsNotifications::replaceNotificationVariables($this, $content, $notifiable);
     }
 
-    abstract protected function defaultTitle($notifiable, ?string $channel = null): string;
-
-    abstract protected function defaultContent($notifiable, ?string $channel = null): string;
-
     public function via($notifiable): array
     {
-        return self::availableVia();
+        return static::availableVia();
     }
 
     /**
