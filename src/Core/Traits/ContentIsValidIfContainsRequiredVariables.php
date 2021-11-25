@@ -10,6 +10,6 @@ trait ContentIsValidIfContainsRequiredVariables
 
     public static function isValid(string $content): bool
     {
-        return Str::containsAll($content, self::getRequiredVariables());
+        return Str::containsAll($content, static::getRequiredVariables());
     }
 }

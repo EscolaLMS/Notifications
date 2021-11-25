@@ -10,6 +10,6 @@ trait TitleIsValidIfContainsRequiredVariables
 
     public static function titleIsValid(?string $title): bool
     {
-        return !is_null($title) && Str::containsAll($title, self::getRequiredTitleVariables());
+        return !is_null($title) && Str::containsAll($title, static::getRequiredTitleVariables());
     }
 }
