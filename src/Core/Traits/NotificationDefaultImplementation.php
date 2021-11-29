@@ -27,7 +27,6 @@ trait NotificationDefaultImplementation
         return [
             'mail',
             'database',
-            'broadcast'
         ];
     }
 
@@ -46,14 +45,14 @@ trait NotificationDefaultImplementation
      */
     public function toMail($notifiable): MailMessage
     {
-        $template = EscolaLmsNotifications::findTemplateForNotification($this, 'mail');
         $message = (new MailMessage)
             ->subject($this->title($notifiable, 'mail'))
             ->line(new HtmlString($this->content($notifiable, 'mail')));
-        if ($template->mail_markdown) {
+        $template = EscolaLmsNotifications::findTemplateForNotification($this, 'mail');
+        if ($template && $template->mail_markdown) {
             $message->template($template->mail_markdown);
         }
-        if ($template->mail_theme) {
+        if ($template && $template->mail_theme) {
             $message->theme($template->mail_theme);
         }
         return $message;

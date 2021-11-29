@@ -10,7 +10,7 @@ use EscolaLms\Notifications\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Testing\TestResponse;
 
-class TemplatesApiTest extends TestCase
+class NotificationsTemplatesApiTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -29,7 +29,7 @@ class TemplatesApiTest extends TestCase
         $this->user->assignRole('admin');
     }
 
-    public function testAdminCanCreateTemplate()
+    public function test_admin_can_create_template()
     {
         $this->authenticateAsAdmin();
 
@@ -61,7 +61,7 @@ class TemplatesApiTest extends TestCase
         $this->assertEquals("title:" . TestVariables::STUDENT_EMAIL, $templateCreated->title);
     }
 
-    public function testAdminCanUpdateExistingTemplate()
+    public function test_admin_can_update_existing_template()
     {
         $this->authenticateAsAdmin();
 

@@ -3,8 +3,8 @@
 namespace EscolaLms\Notifications\Models;
 
 use EscolaLms\Notifications\Database\Factories\TemplateFactory;
+use EscolaLms\Notifications\Services\Contracts\TemplateServiceContract;
 use EscolaLms\Templates\Models\Template as BaseTemplate;
-use EscolaLms\Templates\Services\Contracts\TemplateServiceContract;
 
 class Template extends BaseTemplate
 {
@@ -52,6 +52,6 @@ class Template extends BaseTemplate
     public function getTitleIsValidAttribute(): bool
     {
         $service = app(TemplateServiceContract::class);
-        return $service->isValid($this);
+        return $service->titleIsValid($this);
     }
 }
