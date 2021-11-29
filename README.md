@@ -8,3 +8,13 @@ Notifications package
 [![downloads](https://img.shields.io/packagist/dt/escolalms/notifications)](https://packagist.org/packages/escolalms/notifications)
 [![downloads](https://img.shields.io/packagist/v/escolalms/notifications)](https://packagist.org/packages/escolalms/notifications)
 [![downloads](https://img.shields.io/packagist/l/escolalms/notifications)](https://packagist.org/packages/escolalms/notifications)
+
+###
+
+This package is used for creating Notification with editable Templates.
+
+Notifications must implement `EscolaLms\Notifications\Core\NotificationContract`.
+
+Notifications must be registered using `EscolaLms\Notifications\Facades\EscolaLmsNotifications` Facade, by calling `registerNotification` method.
+
+To create default template for notifications, package should create NotificationSeeder which calls `createDefaultTemplates` method of the Facade.

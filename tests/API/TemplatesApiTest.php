@@ -19,6 +19,7 @@ class TemplatesApiTest extends TestCase
         parent::setUp();
 
         EscolaLmsNotifications::registerNotification(TestNotificationWithVariables::class);
+        EscolaLmsNotifications::createDefaultTemplates();
     }
 
     protected function authenticateAsAdmin()

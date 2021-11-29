@@ -38,7 +38,6 @@ class NotificationsService implements NotificationsServiceContract
         $this->notifications[] = $notificationClass;
         foreach ($notificationClass::availableVia() as $notificationRoute) {
             $this->variablesService::addToken($notificationClass::templateVariablesClass(), $notificationRoute, $notificationClass::templateVariablesSetName());
-            $this->createDefaultTemplates($notificationClass);
         }
     }
 
