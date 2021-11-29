@@ -14,17 +14,26 @@ class TestNotificationWithVariables extends NotificationAbstract
         $this->friend = $friend;
     }
 
+    public static function availableVia(): array
+    {
+        return [
+            'mail',
+            'database',
+            'broadcast',
+        ];
+    }
+
     public static function templateVariablesClass(): string
     {
         return TestVariables::class;
     }
 
-    /*
-    public static function templateVariablesSetName(): string
+    public function toArray($notifiable, ?string $channel = null): array
     {
-        return 'notification-with-variables';
+        return array_merge(parent::toArray($notifiable, $channel), [
+            'friend_id' => $this->friend->getKey(),
+        ]);
     }
-    */
 
     public function additionalDataForVariables($notifiable): array
     {

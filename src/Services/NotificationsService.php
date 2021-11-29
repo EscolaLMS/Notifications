@@ -7,6 +7,8 @@ use EscolaLms\Notifications\Models\Template;
 use EscolaLms\Notifications\Repositories\Contracts\TemplateRepositoryContract;
 use EscolaLms\Notifications\Services\Contracts\NotificationsServiceContract;
 use EscolaLms\Templates\Services\Contracts\VariablesServiceContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Schema;
 use InvalidArgumentException;
 use ReflectionClass;
@@ -83,5 +85,20 @@ class NotificationsService implements NotificationsServiceContract
     public function replaceNotificationVariables(NotificationContract $notification, string $content, $notifiable): string
     {
         return strtr($content, $notification::templateVariablesClass()::getVariablesFromContent($notifiable, ...$notification->additionalDataForVariables($notifiable)));
+    }
+
+    public function findDatabaseNotification(string $notificationClass, Model $notifiable, array $data): ?DatabaseNotification
+    {
+        /** @var NotificationContract|string $notificationClass */
+        if (!is_a($notificationClass, NotificationContract::class, true)) {
+            throw new InvalidArgumentException("Notification Class must implement Notification Contract");
+        }
+        return DatabaseNotification::query()
+            ->where('notifiable_id', $notifiable->getKey())
+            ->where('notifiable_type', $notifiable->getMorphClass())
+            ->where('type', $notificationClass)
+            ->whereJsonContains('data', $data)
+            ->latest()
+            ->first();
     }
 }

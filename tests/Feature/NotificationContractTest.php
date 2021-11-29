@@ -50,6 +50,21 @@ class NotificationContractTest extends TestCase
         Notification::assertSentTo($this->user, TestNotificationWithVariables::class);
     }
 
+    public function test_saving_notification_to_database()
+    {
+        $notification = new TestNotificationWithVariables($this->friend);
+
+        $this->user->notifyNow($notification, ['database']);
+
+        $dbNotification = EscolaLmsNotifications::findDatabaseNotification(TestNotificationWithVariables::class, $this->user, ['friend_id' => $this->friend->getKey()]);
+
+        $this->assertEquals([
+            'title' => 'database-title:' . $this->user->email,
+            'content' => 'database-content:' . $this->user->email,
+            'friend_id' => $this->friend->getKey()
+        ], $dbNotification->data);
+    }
+
     public function test_notification_contract()
     {
         $notification = new TestNotificationWithVariables($this->friend);
