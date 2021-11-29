@@ -56,7 +56,7 @@ class NotificationContractTest extends TestCase
 
         $this->user->notifyNow($notification, ['database']);
 
-        $dbNotification = $this->user->notifications()->where('type', TestNotificationWithVariables::class)->latest()->first();
+        $dbNotification = EscolaLmsNotifications::findDatabaseNotification(TestNotificationWithVariables::class, $this->user, ['friend_id' => $this->friend->getKey()]);
 
         $this->assertEquals([
             'title' => 'database-title:' . $this->user->email,

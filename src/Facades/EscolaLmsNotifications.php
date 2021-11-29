@@ -7,10 +7,11 @@ use EscolaLms\Notifications\Models\Template;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static void          registerNotification(string $notificationsClass)
- * @method static Template|null findTemplateForNotification(NotificationContract $notification, ?string $channel = null)
- * @method static string        replaceNotificationVariables(NotificationContract $notification, string $content, $notifiable)
- * @method static void          createDefaultTemplates(?string $notificationClass = null)
+ * @method static void                      registerNotification(string $notificationsClass)
+ * @method static Template|null             findTemplateForNotification(NotificationContract $notification, ?string $channel = null)
+ * @method static string                    replaceNotificationVariables(NotificationContract $notification, string $content, $notifiable)
+ * @method static void                      createDefaultTemplates(?string $notificationClass = null)
+ * @method static DatabaseNotification|null findDatabaseNotification(string $notificationClass, Model $notifiable, array $data)
  * 
  * @see \EscolaLms\Notifications\Services\NotificationsService
  */
