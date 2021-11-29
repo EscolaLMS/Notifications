@@ -7,6 +7,7 @@ use EscolaLms\Notifications\Models\Template;
 use EscolaLms\Notifications\Repositories\Contracts\TemplateRepositoryContract;
 use EscolaLms\Notifications\Services\Contracts\NotificationsServiceContract;
 use EscolaLms\Templates\Services\Contracts\VariablesServiceContract;
+use Illuminate\Support\Facades\Schema;
 use InvalidArgumentException;
 use ReflectionClass;
 
@@ -37,18 +38,7 @@ class NotificationsService implements NotificationsServiceContract
         $this->notifications[] = $notificationClass;
         foreach ($notificationClass::availableVia() as $notificationRoute) {
             $this->variablesService::addToken($notificationClass::templateVariablesClass(), $notificationRoute, $notificationClass::templateVariablesSetName());
-
-            $template = $this->findTemplateForNotificationClass($notificationClass, $notificationRoute);
-            if (is_null($template)) {
-                $this->templateRepository->create([
-                    'is_default' => true,
-                    'name' => $notificationRoute . ':' . $notificationClass::templateVariablesSetName(),
-                    'type' => $notificationRoute,
-                    'vars_set' => $notificationClass::templateVariablesSetName(),
-                    'title' => $notificationClass::defaultTitleTemplate(),
-                    'content' => $notificationClass::defaultContentTemplate(),
-                ]);
-            }
+            $this->createDefaultTemplates($notificationClass);
         }
     }
 
@@ -59,6 +49,31 @@ class NotificationsService implements NotificationsServiceContract
             return null;
         }
         return $this->templateRepository->findDefaultForTypeAndSubtype($channel, $notificationClass::templateVariablesSetName());
+    }
+
+    public function createDefaultTemplates(?string $notificationClass = null): void
+    {
+        if (Schema::hasTable('templates')) {
+            if (is_null($notificationClass)) {
+                foreach ($this->notifications as $notificationClass) {
+                    $this->createDefaultTemplates($notificationClass);
+                }
+            } else {
+                foreach ($notificationClass::availableVia() as $notificationRoute) {
+                    $template = $this->findTemplateForNotificationClass($notificationClass, $notificationRoute);
+                    if (is_null($template)) {
+                        $this->templateRepository->create([
+                            'is_default' => true,
+                            'name' => $notificationRoute . ':' . $notificationClass::templateVariablesSetName(),
+                            'type' => $notificationRoute,
+                            'vars_set' => $notificationClass::templateVariablesSetName(),
+                            'title' => $notificationClass::defaultTitleTemplate(),
+                            'content' => $notificationClass::defaultContentTemplate(),
+                        ]);
+                    }
+                }
+            }
+        }
     }
 
     public function findTemplateForNotification(NotificationContract $notification, ?string $channel = null): ?Template
