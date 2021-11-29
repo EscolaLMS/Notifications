@@ -11,5 +11,5 @@ providers:
   - Spatie\Permission\PermissionServiceProvider
   - Laravel\Passport\PassportServiceProvider
   - EscolaLms\Core\EscolaLmsServiceProvider
-  - EscolaLms\Auth\EscolaLmsAuthServiceProvider
+  - EscolaLms\Templates\EscolaLmsTemplatesServiceProvider
   - EscolaLms\Notifications\EscolaLmsNotificationsServiceProvider
