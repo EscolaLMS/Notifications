@@ -24,5 +24,5 @@ interface NotificationContract
     public function title($notifiable, ?string $channel = null): string;
     public function content($notifiable, ?string $channel = null): string;
 
-    public function additionalDataForVariables(): array;
+    public function additionalDataForVariables($notifiable): array;
 }

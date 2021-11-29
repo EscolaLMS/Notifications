@@ -95,7 +95,7 @@ trait NotificationDefaultImplementation
      *
      * @return array
      */
-    public function additionalDataForVariables(): array
+    public function additionalDataForVariables($notifiable): array
     {
         return [];
     }

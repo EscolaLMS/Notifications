@@ -26,7 +26,7 @@ class TestNotificationWithVariables extends NotificationAbstract
     }
     */
 
-    public function additionalDataForVariables(): array
+    public function additionalDataForVariables($notifiable): array
     {
         return [
             $this->friend

@@ -70,7 +70,7 @@ class NotificationContractTest extends TestCase
 
         $this->assertEquals('broadcast-title:' . $this->user->email, $broadcast->data['title']);
 
-        $additional = $notification->additionalDataForVariables();
+        $additional = $notification->additionalDataForVariables($this->user);
 
         $this->assertEquals(User::class, get_class($additional[0]));
         $this->assertEquals($this->friend->getKey(), $additional[0]->getKey());

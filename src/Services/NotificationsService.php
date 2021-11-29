@@ -83,6 +83,6 @@ class NotificationsService implements NotificationsServiceContract
 
     public function replaceNotificationVariables(NotificationContract $notification, string $content, $notifiable): string
     {
-        return strtr($content, $notification::templateVariablesClass()::getVariablesFromContent($notifiable, ...$notification->additionalDataForVariables()));
+        return strtr($content, $notification::templateVariablesClass()::getVariablesFromContent($notifiable, ...$notification->additionalDataForVariables($notifiable)));
     }
 }
