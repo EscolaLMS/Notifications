@@ -10,6 +10,7 @@ use EscolaLms\Notifications\Services\Contracts\NotificationsServiceContract;
 use EscolaLms\Notifications\Services\Contracts\TemplateServiceContract;
 use EscolaLms\Notifications\Services\NotificationsService;
 use EscolaLms\Notifications\Services\TemplateService;
+use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
 use EscolaLms\Templates\Http\Requests\TemplateCreateRequest as BaseTemplateCreateRequest;
 use EscolaLms\Templates\Http\Requests\TemplateUpdateRequest as BaseTemplateUpdateRequest;
 use EscolaLms\Templates\Repository\Contracts\TemplateRepositoryContract as BaseTemplateRepositoryContract;
@@ -52,6 +53,10 @@ class EscolaLmsNotificationsServiceProvider extends ServiceProvider
         $this->app->bind('escola_notifications_facade', function () {
             return app(NotificationsService::class);
         });
+        
+        if (!app()->bound(EscolaLmsTemplatesServiceProvider::class)) {
+            $this->app->register(EscolaLmsTemplatesServiceProvider::class);
+        }
     }
 
     protected function bootForConsole(): void
