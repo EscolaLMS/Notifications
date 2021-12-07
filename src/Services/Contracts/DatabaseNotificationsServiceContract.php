@@ -9,4 +9,5 @@ interface DatabaseNotificationsServiceContract
 {
     public function getUserNotifications(User $user, ?string $event = null): LengthAwarePaginator;
     public function getAllNotifications(?string $event = null): LengthAwarePaginator;
+    public function getEvents(): array;
 }

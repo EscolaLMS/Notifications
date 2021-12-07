@@ -29,4 +29,9 @@ class DatabaseNotificationsService implements DatabaseNotificationsServiceContra
         }
         return $query->paginate();
     }
+
+    public function getEvents(): array
+    {
+        return DatabaseNotification::select('event')->distinct()->pluck('event')->toArray();
+    }
 }

@@ -222,6 +222,6 @@ class NotificationsController extends EscolaLmsBaseController
      */
     public function events(NotificationEventsRequest $request)
     {
-        return $this->sendResponse(DatabaseNotification::select('event')->distinct()->pluck('event')->toArray());
+        return $this->sendResponse($this->service->getEvents());
     }
 }
