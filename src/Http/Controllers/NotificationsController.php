@@ -83,6 +83,11 @@ class NotificationsController extends EscolaLmsBaseController
      *          type="string"
      *      ),
      *      @OA\Property(
+     *          property="event",
+     *          description="event full classname",
+     *          type="string"
+     *      ),
+     *      @OA\Property(
      *          property="notifiable_type",
      *          description="class representing User that got the notification",
      *          type="string"

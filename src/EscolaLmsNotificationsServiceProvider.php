@@ -2,64 +2,43 @@
 
 namespace EscolaLms\Notifications;
 
-use EscolaLms\Notifications\Http\Requests\TemplateCreateRequest;
-use EscolaLms\Notifications\Http\Requests\TemplateUpdateRequest;
-use EscolaLms\Notifications\Repositories\Contracts\TemplateRepositoryContract;
-use EscolaLms\Notifications\Repositories\TemplateRepository;
-use EscolaLms\Notifications\Services\Contracts\NotificationsServiceContract;
-use EscolaLms\Notifications\Services\Contracts\TemplateServiceContract;
-use EscolaLms\Notifications\Services\NotificationsService;
-use EscolaLms\Notifications\Services\TemplateService;
-use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
-use EscolaLms\Templates\Http\Requests\TemplateCreateRequest as BaseTemplateCreateRequest;
-use EscolaLms\Templates\Http\Requests\TemplateUpdateRequest as BaseTemplateUpdateRequest;
-use EscolaLms\Templates\Repository\Contracts\TemplateRepositoryContract as BaseTemplateRepositoryContract;
-use EscolaLms\Templates\Services\Contracts\TemplateServiceContract as BaseTemplateServiceContract;
+use EscolaLms\Notifications\Listeners\NotifiableEventListener;
+use EscolaLms\Notifications\Models\DatabaseNotification;
+use Illuminate\Notifications\Channels\DatabaseChannel as IlluminateDatabaseChannel;
+use EscolaLms\Notifications\Core\DatabaseChannel;
+use Illuminate\Notifications\DatabaseNotification as IlluminateDatabaseNotification;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 /**
  * SWAGGER_VERSION
  */
 class EscolaLmsNotificationsServiceProvider extends ServiceProvider
 {
-    public $singletons = [
-        NotificationsServiceContract::class => NotificationsService::class,
-        TemplateRepositoryContract::class => TemplateRepository::class,
-        TemplateServiceContract::class => TemplateService::class,
-    ];
-
-    public $bindings = [];
-
     public function boot()
     {
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
+
+        Event::listen('*', function ($eventName, array $data) {
+            if (Str::startsWith($eventName, 'EscolaLms')) {
+                (new NotifiableEventListener())->handle($data[0]);
+            }
+        });
     }
 
     public function register()
     {
-        $this->app->extend(BaseTemplateRepositoryContract::class, function ($service, $app) {
-            return app(TemplateRepositoryContract::class);
-        });
-
-        $this->app->bind(BaseTemplateCreateRequest::class, TemplateCreateRequest::class);
-        $this->app->bind(BaseTemplateUpdateRequest::class, TemplateUpdateRequest::class);
-        $this->app->bind(BaseTemplateServiceContract::class, TemplateServiceContract::class);
-
-        $this->app->bind('escola_notifications_facade', function () {
-            return app(NotificationsService::class);
-        });
-        
-        if (!app()->bound(EscolaLmsTemplatesServiceProvider::class)) {
-            $this->app->register(EscolaLmsTemplatesServiceProvider::class);
-        }
+        $this->app->singleton(IlluminateDatabaseChannel::class, DatabaseChannel::class);
+        $this->app->instance(IlluminateDatabaseNotification::class, new DatabaseNotification());
     }
 
     protected function bootForConsole(): void
     {
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 }
