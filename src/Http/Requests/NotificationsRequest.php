@@ -2,8 +2,8 @@
 
 namespace EscolaLms\Notifications\Http\Requests;
 
-use EscolaLms\Core\Models\User;
 use EscolaLms\Notifications\Enums\NotificationsPermissionsEnum;
+use EscolaLms\Notifications\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

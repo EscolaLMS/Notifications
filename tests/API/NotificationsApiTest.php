@@ -4,8 +4,7 @@ namespace Tests\Api;
 
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Notifications\Database\Seeders\NotificationsPermissionsSeeder;
-use EscolaLms\Notifications\Facades\EscolaLmsNotifications;
-use EscolaLms\Notifications\Tests\Mocks\TestNotificationWithVariables;
+use EscolaLms\Notifications\Tests\Mocks\TestEvent;
 use EscolaLms\Notifications\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -18,9 +17,6 @@ class NotificationsApiTest extends TestCase
     {
         parent::setUp();
 
-        EscolaLmsNotifications::registerNotification(TestNotificationWithVariables::class);
-        EscolaLmsNotifications::createDefaultTemplates();
-
         $this->seed(NotificationsPermissionsSeeder::class);
     }
 
@@ -29,8 +25,7 @@ class NotificationsApiTest extends TestCase
         $student = $this->makeStudent();
         $friend = $this->makeStudent();
 
-        $notification = new TestNotificationWithVariables($friend);
-        $student->notifyNow($notification, ['database']);
+        event(new TestEvent($student, $friend, 'foo'));
 
         $response = $this->actingAs($student)->json('GET', '/api/notifications/');
         $response->assertOk();
@@ -38,7 +33,7 @@ class NotificationsApiTest extends TestCase
         $json = $response->json();
         $notificationDb = $json['data'][0];
 
-        $this->assertEquals($notification->toArray($student, 'database'), $notificationDb['data']);
+        $this->assertEquals($friend->getKey(), $notificationDb['data']['friend']['id']);
     }
 
     public function test_admin_can_see_any_notifications()
@@ -47,10 +42,8 @@ class NotificationsApiTest extends TestCase
         $student = $this->makeStudent();
         $friend = $this->makeStudent();
 
-        $notification = new TestNotificationWithVariables($friend);
-        $student->notifyNow($notification, ['database']);
-        $notification2 = new TestNotificationWithVariables($student);
-        $friend->notifyNow($notification2, ['database']);
+        event(new TestEvent($student, $friend, 'foo'));
+        event(new TestEvent($friend, $student, 'foo'));
 
         $response = $this->actingAs($admin)->json('GET', '/api/notifications/' . $student->getKey());
         $response->assertOk();
@@ -58,7 +51,7 @@ class NotificationsApiTest extends TestCase
 
         $json = $response->json();
         $notificationDb = $json['data'][0];
-        $this->assertEquals($notification->toArray($student, 'database'), $notificationDb['data']);
+        $this->assertEquals($friend->getKey(), $notificationDb['data']['friend']['id']);
 
         $response = $this->actingAs($admin)->json('GET', '/api/notifications/' . $friend->getKey());
         $response->assertOk();
@@ -66,6 +59,6 @@ class NotificationsApiTest extends TestCase
 
         $json = $response->json();
         $notificationDb = $json['data'][0];
-        $this->assertEquals($notification2->toArray($friend, 'database'), $notificationDb['data']);
+        $this->assertEquals($student->getKey(), $notificationDb['data']['friend']['id']);
     }
 }
