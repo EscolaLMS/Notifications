@@ -15,7 +15,8 @@ class NotificationsPermissionsSeeder extends Seeder
         $admin = Role::findOrCreate(UserRole::ADMIN, 'api');
 
         Permission::findOrCreate(NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS, 'api');
+        Permission::findOrCreate(NotificationsPermissionsEnum::READ_NOTIFICATION_EVENTS_LIST, 'api');
 
-        $admin->givePermissionTo([NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS]);
+        $admin->givePermissionTo([NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS, NotificationsPermissionsEnum::READ_NOTIFICATION_EVENTS_LIST]);
     }
 }

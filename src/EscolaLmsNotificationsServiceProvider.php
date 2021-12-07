@@ -6,16 +6,21 @@ use EscolaLms\Notifications\Listeners\NotifiableEventListener;
 use EscolaLms\Notifications\Models\DatabaseNotification;
 use Illuminate\Notifications\Channels\DatabaseChannel as IlluminateDatabaseChannel;
 use EscolaLms\Notifications\Core\DatabaseChannel;
+use EscolaLms\Notifications\Services\Contracts\DatabaseNotificationsServiceContract;
+use EscolaLms\Notifications\Services\DatabaseNotificationsService;
 use Illuminate\Notifications\DatabaseNotification as IlluminateDatabaseNotification;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 
 /**
  * SWAGGER_VERSION
  */
 class EscolaLmsNotificationsServiceProvider extends ServiceProvider
 {
+    public $singletons = [
+        DatabaseNotificationsServiceContract::class => DatabaseNotificationsService::class
+    ];
+
     public function boot()
     {
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
