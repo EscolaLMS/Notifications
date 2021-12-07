@@ -1,0 +1,160 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "EscolaLMS",
+        "version": "0.0.1"
+    },
+    "paths": {
+        "/api/notifications": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get notifications",
+                "description": "Get paginated list of notifications sent using `database` channel",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Pagination Page Number",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Pagination Per Page",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/notifications/:user": {
+            "get": {
+                "tags": [
+                    "Notifications Admin"
+                ],
+                "summary": "Get notifications",
+                "description": "Get paginated list of notifications sent using `database` channel",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Pagination Page Number",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Pagination Per Page",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "event",
+                        "in": "query",
+                        "description": "Event class filter",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "description": "User Id (if empty, will return all notifications)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/notifications/events": {
+            "get": {
+                "tags": [
+                    "Notifications Admin"
+                ],
+                "summary": "Get list of events for which notifications exist",
+                "description": "Get list of events for which notifications exist",
+                "operationId": "098ad8257c50e79bcc105481d832cfd1",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Notification": {
+                "properties": {
+                    "id": {
+                        "description": "notification uuid",
+                        "type": "integer"
+                    },
+                    "type": {
+                        "description": "notification full classname",
+                        "type": "string"
+                    },
+                    "event": {
+                        "description": "event full classname",
+                        "type": "string"
+                    },
+                    "notifiable_type": {
+                        "description": "class representing User that got the notification",
+                        "type": "string"
+                    },
+                    "notifiable_id": {
+                        "description": "id of User that got the notification",
+                        "type": "string"
+                    },
+                    "data": {
+                        "description": "all notification data",
+                        "type": "object"
+                    },
+                    "read_at": {
+                        "description": "timestamp when notification was marked as read",
+                        "type": "datetime"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}
