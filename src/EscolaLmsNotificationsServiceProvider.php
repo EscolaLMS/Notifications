@@ -24,10 +24,8 @@ class EscolaLmsNotificationsServiceProvider extends ServiceProvider
             $this->bootForConsole();
         }
 
-        Event::listen('*', function ($eventName, array $data) {
-            if (Str::startsWith($eventName, 'EscolaLms')) {
-                (new NotifiableEventListener())->handle($data[0]);
-            }
+        Event::listen('EscolaLms*', function ($eventName, array $data) {
+            (new NotifiableEventListener())->handle($data[0]);
         });
     }
 
