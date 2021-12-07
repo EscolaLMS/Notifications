@@ -19,7 +19,7 @@ class NotificationsRequest extends FormRequest
     {
         if (!$this->user()->can(NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS)) {
             $this->merge(['user' => $this->user()->getKey()]);
-        } else {
+        } elseif ($this->route('user')) {
             $this->merge(['user' => $this->route('user')]);
         }
     }
@@ -27,12 +27,18 @@ class NotificationsRequest extends FormRequest
     public function rules()
     {
         return [
-            'user' => ['required', 'integer', Rule::exists('users', 'id')],
+            'user' => ['sometimes', 'required', 'integer', Rule::exists('users', 'id')],
+            'event' => ['sometimes', 'nullable', 'string'],
         ];
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return User::find($this->input('user'));
+    }
+
+    public function getEvent(): ?string
+    {
+        return $this->input('event');
     }
 }
