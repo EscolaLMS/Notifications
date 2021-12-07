@@ -16,12 +16,8 @@ class DatabaseChannel extends IlluminateDatabaseChannel
 
     protected function buildPayload($notifiable, Notification $notification)
     {
-        return [
-            'id' => $notification->id,
-            'type' => get_class($notification),
+        return array_merge(parent::buildPayload($notifiable, $notification), [
             'event' => $notification instanceof EventNotification ? get_class($notification->getEvent()) : null,
-            'data' => $this->getData($notifiable, $notification),
-            'read_at' => null,
-        ];
+        ]);
     }
 }
