@@ -8,6 +8,6 @@ Route::group(['prefix' => 'api/notifications'], function () {
 });
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'api/admin/notifications'], function () {
-    Route::get('/{user?}', [NotificationsController::class, 'index'])->where(['user' => '[0-9]+']);
     Route::get('/events', [NotificationsController::class, 'events']);
+    Route::get('/{user?}', [NotificationsController::class, 'index'])->where(['user' => '[0-9]+']);
 });
