@@ -3,12 +3,13 @@
 namespace EscolaLms\Notifications\Http\Controllers;
 
 use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
+use EscolaLms\Notifications\Enums\NotificationsPermissionsEnum;
 use EscolaLms\Notifications\Http\Requests\NotificationEventsRequest;
+use EscolaLms\Notifications\Http\Requests\NotificationsAdminRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsRequest;
+use EscolaLms\Notifications\Http\Requests\NotificationsUserRequest;
 use EscolaLms\Notifications\Http\Resources\NotificationResource;
-use EscolaLms\Notifications\Models\DatabaseNotification as DatabaseNotification;
 use EscolaLms\Notifications\Services\Contracts\DatabaseNotificationsServiceContract;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class NotificationsController extends EscolaLmsBaseController
 {
@@ -181,11 +182,13 @@ class NotificationsController extends EscolaLmsBaseController
      */
     public function index(NotificationsRequest $request)
     {
-        if ($request->getUser()) {
-            $notifications = $this->service->getUserNotifications($request->getUser(), $request->getEvent());
-        } else {
-            $notifications = $this->service->getAllNotifications($request->getEvent());
-        }
+        $notifications = $this->service->getAllNotifications($request->getEvent());
+        return $this->sendResponseForResource(NotificationResource::collection($notifications));
+    }
+
+    public function user(NotificationsUserRequest $request)
+    {
+        $notifications = $this->service->getUserNotifications($request->getUser(), $request->getEvent());
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
 
