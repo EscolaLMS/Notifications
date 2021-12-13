@@ -7,6 +7,7 @@ use EscolaLms\Notifications\Enums\NotificationsPermissionsEnum;
 use EscolaLms\Notifications\Http\Requests\NotificationEventsRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsAdminRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsRequest;
+use EscolaLms\Notifications\Http\Requests\NotificationsUserRequest;
 use EscolaLms\Notifications\Http\Resources\NotificationResource;
 use EscolaLms\Notifications\Services\Contracts\DatabaseNotificationsServiceContract;
 
@@ -181,15 +182,11 @@ class NotificationsController extends EscolaLmsBaseController
      */
     public function index(NotificationsRequest $request)
     {
-        if (!$request->user()->can(NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS)) {
-            $notifications = $this->service->getUserNotifications($request->user(), $request->getEvent());
-        } else {
-            $notifications = $this->service->getAllNotifications($request->getEvent());
-        }
+        $notifications = $this->service->getAllNotifications($request->getEvent());
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
 
-    public function user(NotificationsAdminRequest $request)
+    public function user(NotificationsUserRequest $request)
     {
         $notifications = $this->service->getUserNotifications($request->getUser(), $request->getEvent());
         return $this->sendResponseForResource(NotificationResource::collection($notifications));

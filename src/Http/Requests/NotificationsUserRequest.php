@@ -7,17 +7,20 @@ use EscolaLms\Notifications\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class NotificationsAdminRequest extends FormRequest
+class NotificationsUserRequest extends FormRequest
 {
-
     public function authorize()
     {
-        return !is_null($this->user()) && $this->user()->can(NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS);
+        return !is_null($this->user());
     }
 
     protected function prepareForValidation()
     {
-        $this->merge(['user' => $this->route('user')]);
+        if ($this->user()->can(NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS)) {
+            $this->merge(['user' => $this->route('user')]);
+        } else {
+            $this->merge(['user' => $this->user()->getKey()]);
+        }
     }
 
     public function rules()
