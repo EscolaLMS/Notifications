@@ -7,22 +7,17 @@ use EscolaLms\Notifications\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class NotificationsUserRequest extends FormRequest
+class NotificationsAdminRequest extends FormRequest
 {
 
     public function authorize()
     {
-        return !is_null($this->user());
+        return !is_null($this->user()) && $this->user()->can(NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS);
     }
 
     protected function prepareForValidation()
     {
-        if (!$this->user()->can(NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS)) {
-            // user without permissions can read only his own notifications
-            $this->merge(['user' => $this->user()->getKey()]);
-        } else {
-            $this->merge(['user' => $this->route('user')]);
-        }
+        $this->merge(['user' => $this->route('user')]);
     }
 
     public function rules()

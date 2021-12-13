@@ -5,8 +5,8 @@ namespace EscolaLms\Notifications\Http\Controllers;
 use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Notifications\Enums\NotificationsPermissionsEnum;
 use EscolaLms\Notifications\Http\Requests\NotificationEventsRequest;
+use EscolaLms\Notifications\Http\Requests\NotificationsAdminRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsRequest;
-use EscolaLms\Notifications\Http\Requests\NotificationsUserRequest;
 use EscolaLms\Notifications\Http\Resources\NotificationResource;
 use EscolaLms\Notifications\Services\Contracts\DatabaseNotificationsServiceContract;
 
@@ -189,7 +189,7 @@ class NotificationsController extends EscolaLmsBaseController
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
 
-    public function user(NotificationsUserRequest $request)
+    public function user(NotificationsAdminRequest $request)
     {
         $notifications = $this->service->getUserNotifications($request->getUser(), $request->getEvent());
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
