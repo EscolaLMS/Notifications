@@ -51,6 +51,7 @@
                 ],
                 "summary": "Get notifications",
                 "description": "Get paginated list of notifications sent using `database` channel",
+                "operationId": "08e51c29c6e146e844bd5a3857361b12",
                 "parameters": [
                     {
                         "name": "page",
@@ -91,6 +92,23 @@
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/notifications/events": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get list of events for which notifications exist",
+                "description": "Get list of events for which notifications exist",
                 "responses": {
                     "200": {
                         "description": "successful operation",
