@@ -16,11 +16,17 @@ class NotificationsRequest extends FormRequest
     {
         return [
             'event' => ['sometimes', 'nullable', 'string'],
+            'include_read' => ['sometimes', 'boolean'],
         ];
     }
 
     public function getEvent(): ?string
     {
         return $this->input('event');
+    }
+
+    public function getIncludeRead(): bool
+    {
+        return $this->input('include_read', false);
     }
 }

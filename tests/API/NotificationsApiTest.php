@@ -39,6 +39,41 @@ class NotificationsApiTest extends TestCase
         $this->assertEquals($friend->getKey(), $notificationDb['data']['friend']['id']);
     }
 
+    public function test_user_can_mark_his_notification_as_read()
+    {
+        $student = $this->makeStudent();
+        $friend = $this->makeStudent();
+
+        event(new TestEvent($student, $friend, 'foo'));
+        event(new TestEvent($friend, $student, 'foo'));
+
+        $notification = $student->notifications()->latest()->first();
+        $friendNotification = $friend->notifications()->latest()->first();
+
+        $this->assertNull($notification->read_at);
+
+        $response = $this->actingAs($student)->json('GET', '/api/notifications/');
+        $response->assertOk();
+        $response->assertJsonCount(1, 'data');
+
+        $response = $this->actingAs($student)->json('POST', '/api/notifications/' . $notification->getKey() . '/read');
+        $response->assertOk();
+
+        $notification->refresh();
+        $this->assertNotNull($notification->read_at);
+
+        $response = $this->actingAs($student)->json('GET', '/api/notifications/');
+        $response->assertOk();
+        $response->assertJsonCount(0, 'data');
+
+        $response = $this->actingAs($student)->json('GET', '/api/notifications/', ['include_read' => true]);
+        $response->assertOk();
+        $response->assertJsonCount(1, 'data');
+
+        $response = $this->actingAs($student)->json('POST', '/api/notifications/' . $friendNotification->getKey() . '/read');
+        $response->assertForbidden();
+    }
+
     public function test_user_can_not_see_others_notifications()
     {
         $student = $this->makeStudent();
