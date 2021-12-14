@@ -28,6 +28,7 @@ class NotificationsUserRequest extends FormRequest
         return [
             'user' => ['required', 'integer', Rule::exists('users', 'id')],
             'event' => ['sometimes', 'nullable', 'string'],
+            'include_read' => ['sometimes', 'boolean'],
         ];
     }
 
@@ -39,5 +40,10 @@ class NotificationsUserRequest extends FormRequest
     public function getEvent(): ?string
     {
         return $this->input('event');
+    }
+
+    public function getIncludeRead(): bool
+    {
+        return $this->input('include_read', ($this->user()->getKey() !== $this->getUser()->getKey()));
     }
 }

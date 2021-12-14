@@ -4,6 +4,7 @@ namespace EscolaLms\Notifications\Http\Controllers;
 
 use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Notifications\Http\Requests\NotificationEventsRequest;
+use EscolaLms\Notifications\Http\Requests\NotificationReadRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsUserRequest;
 use EscolaLms\Notifications\Http\Resources\NotificationResource;
@@ -106,6 +107,15 @@ class NotificationsController extends EscolaLmsBaseController
      *          ),
      *      ),
      *      @OA\Parameter(
+     *          name="include_read",
+     *          description="Include read notifications",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="boolean",
+     *          ),
+     *      ),
+     *      @OA\Parameter(
      *          name="user",
      *          description="User Id (if empty, will return all notifications)",
      *          required=false,
@@ -140,13 +150,13 @@ class NotificationsController extends EscolaLmsBaseController
 
     public function index(NotificationsRequest $request)
     {
-        $notifications = $this->service->getAllNotifications($request->getEvent());
+        $notifications = $this->service->getAllNotifications($request->getIncludeRead(), $request->getEvent());
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
 
     public function user(NotificationsUserRequest $request)
     {
-        $notifications = $this->service->getUserNotifications($request->getUser(), $request->getEvent());
+        $notifications = $this->service->getUserNotifications($request->getUser(), $request->getIncludeRead(), $request->getEvent());
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
 
@@ -216,5 +226,50 @@ class NotificationsController extends EscolaLmsBaseController
     public function events(NotificationEventsRequest $request)
     {
         return $this->sendResponse($this->service->getEvents());
+    }
+
+    /**
+     * @OA\Post(
+     *      path="/api/notifications/:notification/read",
+     *      summary="Mark notification as read",
+     *      tags={"Notifications"},
+     *      description="Mark notification as read",
+     *      @OA\Parameter(
+     *          name="notification",
+     *          description="Notification uuid / id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(type="string"),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OA\MediaType(
+     *              mediaType="application/json"
+     *          ),
+     *          @OA\Schema(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="success",
+     *                  type="boolean"
+     *              ),
+     *              @OA\Property(
+     *                  property="data",
+     *                  type="object",
+     *                  @OA\Schema(ref="#/components/schemas/Notification"),
+     *              ),
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string"
+     *              )
+     *          )
+     *      )
+     * )
+     */
+    public function read(NotificationReadRequest $request)
+    {
+        $notification = $request->getNotification();
+        $notification->markAsRead();
+        return $this->sendResponseForResource(NotificationResource::make($notification->refresh()));
     }
 }

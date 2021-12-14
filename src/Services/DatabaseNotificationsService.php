@@ -10,7 +10,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class DatabaseNotificationsService implements DatabaseNotificationsServiceContract
 {
-    public function getUserNotifications(User $user, ?string $event = null): LengthAwarePaginator
+    public function getUserNotifications(User $user, bool $includeRead = false, ?string $event = null): LengthAwarePaginator
     {
         $user = $user instanceof NotificationsUser ? $user : NotificationsUser::find($user->getKey());
 
@@ -18,14 +18,20 @@ class DatabaseNotificationsService implements DatabaseNotificationsServiceContra
         if ($event) {
             $query = $query->where('event', $event);
         }
+        if (!$includeRead) {
+            $query = $query->whereNull('read_at');
+        }
         return $query->paginate();
     }
 
-    public function getAllNotifications(?string $event = null): LengthAwarePaginator
+    public function getAllNotifications(bool $includeRead = false, ?string $event = null): LengthAwarePaginator
     {
         $query = DatabaseNotification::query();
         if ($event) {
             $query = $query->where('event', $event);
+        }
+        if (!$includeRead) {
+            $query = $query->whereNull('read_at');
         }
         return $query->paginate();
     }
