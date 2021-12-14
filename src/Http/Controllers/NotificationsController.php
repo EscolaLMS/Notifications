@@ -73,7 +73,7 @@ class NotificationsController extends EscolaLmsBaseController
 
     /**
      * @OA\Get(
-     *      path="/api/admin/notifications/:user",
+     *      path="/api/admin/notifications/{user}",
      *      summary="Get notifications",
      *      tags={"Notifications Admin"},
      *      description="Get paginated list of notifications sent using `database` channel",
@@ -230,7 +230,7 @@ class NotificationsController extends EscolaLmsBaseController
 
     /**
      * @OA\Post(
-     *      path="/api/notifications/:notification/read",
+     *      path="/api/notifications/{notification}/read",
      *      summary="Mark notification as read",
      *      tags={"Notifications"},
      *      description="Mark notification as read",
