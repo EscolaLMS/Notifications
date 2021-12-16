@@ -44,14 +44,14 @@
                 }
             }
         },
-        "/api/admin/notifications/:user": {
+        "/api/admin/notifications/{user}": {
             "get": {
                 "tags": [
                     "Notifications Admin"
                 ],
                 "summary": "Get notifications",
                 "description": "Get paginated list of notifications sent using `database` channel",
-                "operationId": "08e51c29c6e146e844bd5a3857361b12",
+                "operationId": "7bd36059d0d069a036d491796df0275e",
                 "parameters": [
                     {
                         "name": "page",
@@ -80,6 +80,15 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "include_read",
+                        "in": "query",
+                        "description": "Include read notifications",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
                         }
                     },
                     {
@@ -127,6 +136,35 @@
                 "summary": "Get list of events for which notifications exist",
                 "description": "Get list of events for which notifications exist",
                 "operationId": "098ad8257c50e79bcc105481d832cfd1",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/notifications/{notification}/read": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Mark notification as read",
+                "description": "Mark notification as read",
+                "operationId": "63140cb7e85ea113e1db11b23d5ab827",
+                "parameters": [
+                    {
+                        "name": "notification",
+                        "in": "path",
+                        "description": "Notification uuid / id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
