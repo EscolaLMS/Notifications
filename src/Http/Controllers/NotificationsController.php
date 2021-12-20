@@ -9,6 +9,7 @@ use EscolaLms\Notifications\Http\Requests\NotificationsRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsUserRequest;
 use EscolaLms\Notifications\Http\Resources\NotificationResource;
 use EscolaLms\Notifications\Services\Contracts\DatabaseNotificationsServiceContract;
+use EscolaLms\Notifications\Dtos\NotificationsFilterCriteriaDto;
 
 class NotificationsController extends EscolaLmsBaseController
 {
@@ -115,6 +116,24 @@ class NotificationsController extends EscolaLmsBaseController
      *              type="boolean",
      *          ),
      *      ),
+     *     @OA\Parameter(
+     *          name="date_from",
+     *          description="From date filter",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="date",
+     *          ),
+     *      ),
+     *     @OA\Parameter(
+     *          name="date_to",
+     *          description="To date filter",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="date",
+     *          ),
+     *      ),
      *      @OA\Parameter(
      *          name="user",
      *          description="User Id (if empty, will return all notifications)",
@@ -150,13 +169,17 @@ class NotificationsController extends EscolaLmsBaseController
 
     public function index(NotificationsRequest $request)
     {
-        $notifications = $this->service->getAllNotifications($request->getIncludeRead(), $request->getEvent());
+        $notificationsFilterDto = NotificationsFilterCriteriaDto::instantiateFromRequest($request);
+        $notifications = $this->service->getAllNotifications($notificationsFilterDto);
+
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
 
     public function user(NotificationsUserRequest $request)
     {
-        $notifications = $this->service->getUserNotifications($request->getUser(), $request->getIncludeRead(), $request->getEvent());
+        $notificationsFilterDto = NotificationsFilterCriteriaDto::instantiateFromRequest($request);
+        $notifications = $this->service->getUserNotifications($request->getUser(), $notificationsFilterDto);
+
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
 

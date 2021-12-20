@@ -17,6 +17,8 @@ class NotificationsRequest extends FormRequest
         return [
             'event' => ['sometimes', 'nullable', 'string'],
             'include_read' => ['sometimes', 'boolean'],
+            'date_from' => ['sometimes', 'date'],
+            'date_to' => ['sometimes', 'date'],
         ];
     }
 
@@ -28,5 +30,15 @@ class NotificationsRequest extends FormRequest
     public function getIncludeRead(): bool
     {
         return $this->input('include_read', false);
+    }
+
+    public function getDateFrom(): ?string
+    {
+        return $this->input('date_from');
+    }
+
+    public function getDateTo(): ?string
+    {
+        return $this->input('date_to');
     }
 }

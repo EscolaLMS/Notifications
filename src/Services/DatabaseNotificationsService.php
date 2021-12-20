@@ -3,41 +3,48 @@
 namespace EscolaLms\Notifications\Services;
 
 use EscolaLms\Core\Models\User;
+use EscolaLms\Core\Repositories\Criteria\Criterion;
 use EscolaLms\Notifications\Models\DatabaseNotification;
 use EscolaLms\Notifications\Models\User as NotificationsUser;
 use EscolaLms\Notifications\Services\Contracts\DatabaseNotificationsServiceContract;
+use EscolaLms\Notifications\Dtos\NotificationsFilterCriteriaDto;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class DatabaseNotificationsService implements DatabaseNotificationsServiceContract
 {
-    public function getUserNotifications(User $user, bool $includeRead = false, ?string $event = null): LengthAwarePaginator
-    {
+    public function getUserNotifications(
+        User $user,
+        NotificationsFilterCriteriaDto $notificationsFilterDto
+    ): LengthAwarePaginator {
         $user = $user instanceof NotificationsUser ? $user : NotificationsUser::find($user->getKey());
 
-        $query = $user->notifications();
-        if ($event) {
-            $query = $query->where('event', $event);
-        }
-        if (!$includeRead) {
-            $query = $query->whereNull('read_at');
-        }
+        $query = $user->notifications()->getQuery();
+        $query = $this->applyCriteria($query, $notificationsFilterDto->toArray());
+
         return $query->paginate();
     }
 
-    public function getAllNotifications(bool $includeRead = false, ?string $event = null): LengthAwarePaginator
-    {
+    public function getAllNotifications(NotificationsFilterCriteriaDto $notificationsFilterDto): LengthAwarePaginator {
         $query = DatabaseNotification::query();
-        if ($event) {
-            $query = $query->where('event', $event);
-        }
-        if (!$includeRead) {
-            $query = $query->whereNull('read_at');
-        }
+        $query = $this->applyCriteria($query, $notificationsFilterDto->toArray());
+
         return $query->paginate();
     }
 
     public function getEvents(): array
     {
         return DatabaseNotification::select('event')->distinct()->pluck('event')->toArray();
+    }
+
+    private function applyCriteria(Builder $query, array $criteria): Builder
+    {
+        foreach ($criteria as $criterion) {
+            if ($criterion instanceof Criterion) {
+                $query = $criterion->apply($query);
+            }
+        }
+
+        return $query;
     }
 }

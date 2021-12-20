@@ -8,6 +8,7 @@ use EscolaLms\Notifications\Tests\Mocks\DifferentTestEvent;
 use EscolaLms\Notifications\Tests\Mocks\TestEvent;
 use EscolaLms\Notifications\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Carbon;
 
 class NotificationsApiTest extends TestCase
 {
@@ -184,5 +185,26 @@ class NotificationsApiTest extends TestCase
         ]);
         $response->assertOk();
         $response->assertJsonCount(1, 'data');
+
+        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/', [
+            'date_from' => Carbon::now()->addDay()->toIso8601String(),
+        ]);
+        $response->assertOk();
+
+        $response->assertJsonCount(0, 'data');
+
+        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/', [
+            'date_to' => Carbon::now()->subDay()->toIso8601String(),
+        ]);
+        $response->assertOk();
+        $response->assertJsonCount(0, 'data');
+
+        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/', [
+            'date_from' => Carbon::now()->subDay()->toIso8601String(),
+            'date_to' => Carbon::now()->addDay()->toIso8601String(),
+        ]);
+        $response->assertOk();
+
+        $response->assertJsonCount(3, 'data');
     }
 }
