@@ -92,6 +92,24 @@
                         }
                     },
                     {
+                        "name": "date_from",
+                        "in": "query",
+                        "description": "From date filter",
+                        "required": false,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "description": "To date filter",
+                        "required": false,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
                         "name": "user",
                         "in": "path",
                         "description": "User Id (if empty, will return all notifications)",
