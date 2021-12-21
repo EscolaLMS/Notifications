@@ -206,5 +206,14 @@ class NotificationsApiTest extends TestCase
         $response->assertOk();
 
         $response->assertJsonCount(3, 'data');
+
+        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/', [
+            'date_from' => Carbon::now()->subDay()->toIso8601String(),
+            'date_to' => Carbon::now()->addDay()->toIso8601String(),
+            'event' => TestEvent::class,
+        ]);
+        $response->assertOk();
+
+        $response->assertJsonCount(2, 'data');
     }
 }
