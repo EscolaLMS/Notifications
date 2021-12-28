@@ -7,6 +7,6 @@ use EscolaLms\Core\Enums\BasicEnum;
 class NotificationsPermissionsEnum extends BasicEnum
 {
 
-    const READ_ALL_NOTIFICATIONS        = 'read all notifications';
-    const READ_NOTIFICATION_EVENTS_LIST = 'read notifications events list';
+    const READ_ALL_NOTIFICATIONS        = 'dashboard-app_notification_list';
+    const READ_NOTIFICATION_EVENTS_LIST = 'dashboard-app_notification_event_list';
 }
