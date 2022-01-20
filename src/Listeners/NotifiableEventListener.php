@@ -31,7 +31,12 @@ class NotifiableEventListener
 
     protected function extractPropertiesFromEvent($event): array
     {
-        $properties = (new ReflectionClass($event))->getProperties();
+        $reflectionClass = new ReflectionClass($event);
+        $properties = $reflectionClass->getProperties();
+
+        if ($parentClass = $reflectionClass->getParentClass()) {
+            $properties = array_merge($properties, $parentClass->getProperties());
+        }
 
         $values = [];
 
