@@ -37,7 +37,6 @@ class DatabaseNotificationsService implements DatabaseNotificationsServiceContra
     {
         return DatabaseNotification::select('event')
             ->distinct()
-            ->whereNotIn('event', config('escolalms_notifications.except_events'))
             ->pluck('event')
             ->toArray();
     }
