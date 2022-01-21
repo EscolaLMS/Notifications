@@ -36,6 +36,7 @@ class EscolaLmsNotificationsServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__ . '/config.php', 'escolalms_notifications');
         $this->app->singleton(IlluminateDatabaseChannel::class, DatabaseChannel::class);
         $this->app->instance(IlluminateDatabaseNotification::class, new DatabaseNotification());
     }

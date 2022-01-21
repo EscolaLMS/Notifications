@@ -34,7 +34,11 @@ class DatabaseNotificationsService implements DatabaseNotificationsServiceContra
 
     public function getEvents(): array
     {
-        return DatabaseNotification::select('event')->distinct()->pluck('event')->toArray();
+        return DatabaseNotification::select('event')
+            ->distinct()
+            ->whereNotIn('event', config('escolalms_notifications.except_events'))
+            ->pluck('event')
+            ->toArray();
     }
 
     private function applyCriteria(Builder $query, array $criteria): Builder
