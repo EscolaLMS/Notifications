@@ -19,7 +19,8 @@ class DatabaseNotificationsService implements DatabaseNotificationsServiceContra
     ): LengthAwarePaginator {
         $user = $user instanceof NotificationsUser ? $user : NotificationsUser::find($user->getKey());
 
-        $query = $user->notifications()->getQuery();
+        $query = $user->notifications()
+            ->whereNotIn('event', config('escolalms_notifications.except_events'))->getQuery();
         $query = $this->applyCriteria($query, $notificationsFilterDto->toArray());
 
         return $query->paginate();
@@ -34,7 +35,10 @@ class DatabaseNotificationsService implements DatabaseNotificationsServiceContra
 
     public function getEvents(): array
     {
-        return DatabaseNotification::select('event')->distinct()->pluck('event')->toArray();
+        return DatabaseNotification::select('event')
+            ->distinct()
+            ->pluck('event')
+            ->toArray();
     }
 
     private function applyCriteria(Builder $query, array $criteria): Builder
