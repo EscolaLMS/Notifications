@@ -10,8 +10,9 @@ use EscolaLms\Notifications\Http\Requests\NotificationsUserRequest;
 use EscolaLms\Notifications\Http\Resources\NotificationResource;
 use EscolaLms\Notifications\Services\Contracts\DatabaseNotificationsServiceContract;
 use EscolaLms\Notifications\Dtos\NotificationsFilterCriteriaDto;
+use Illuminate\Http\JsonResponse;
 
-class NotificationsController extends EscolaLmsBaseController
+class NotificationsController extends EscolaLmsBaseController implements NotificationsApiSwagger
 {
     private DatabaseNotificationsServiceContract $service;
 
@@ -20,154 +21,7 @@ class NotificationsController extends EscolaLmsBaseController
         $this->service = $service;
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/notifications",
-     *      summary="Get notifications",
-     *      tags={"Notifications"},
-     *      description="Get paginated list of notifications sent using `database` channel",
-     *      @OA\Parameter(
-     *          name="page",
-     *          description="Pagination Page Number",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="number",
-     *               default=1,
-     *          ),
-     *      ),
-     *      @OA\Parameter(
-     *          name="per_page",
-     *          description="Pagination Per Page",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="number",
-     *               default=15,
-     *          ),
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="successful operation",
-     *          @OA\MediaType(
-     *              mediaType="application/json"
-     *          ),
-     *          @OA\Schema(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="success",
-     *                  type="boolean"
-     *              ),
-     *              @OA\Property(
-     *                  property="data",
-     *                  type="array",
-     *                  @OA\Items(ref="#/components/schemas/Notification")
-     *              ),
-     *              @OA\Property(
-     *                  property="message",
-     *                  type="string"
-     *              )
-     *          )
-     *      )
-     * )
-     */
-
-    /**
-     * @OA\Get(
-     *      path="/api/admin/notifications/{user}",
-     *      summary="Get notifications",
-     *      tags={"Notifications Admin"},
-     *      description="Get paginated list of notifications sent using `database` channel",
-     *      @OA\Parameter(
-     *          name="page",
-     *          description="Pagination Page Number",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="number",
-     *               default=1,
-     *          ),
-     *      ),
-     *      @OA\Parameter(
-     *          name="per_page",
-     *          description="Pagination Per Page",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="number",
-     *               default=15,
-     *          ),
-     *      ),
-     *      @OA\Parameter(
-     *          name="event",
-     *          description="Event class filter",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="string",
-     *          ),
-     *      ),
-     *      @OA\Parameter(
-     *          name="include_read",
-     *          description="Include read notifications",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="boolean",
-     *          ),
-     *      ),
-     *     @OA\Parameter(
-     *          name="date_from",
-     *          description="From date filter",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="date",
-     *          ),
-     *      ),
-     *     @OA\Parameter(
-     *          name="date_to",
-     *          description="To date filter",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="date",
-     *          ),
-     *      ),
-     *      @OA\Parameter(
-     *          name="user",
-     *          description="User Id (if empty, will return all notifications)",
-     *          required=false,
-     *          in="path",
-     *          @OA\Schema(type="integer"),
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="successful operation",
-     *          @OA\MediaType(
-     *              mediaType="application/json"
-     *          ),
-     *          @OA\Schema(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="success",
-     *                  type="boolean"
-     *              ),
-     *              @OA\Property(
-     *                  property="data",
-     *                  type="array",
-     *                  @OA\Items(ref="#/components/schemas/Notification")
-     *              ),
-     *              @OA\Property(
-     *                  property="message",
-     *                  type="string"
-     *              )
-     *          )
-     *      )
-     * )
-     */
-
-    public function index(NotificationsRequest $request)
+    public function index(NotificationsRequest $request): JsonResponse
     {
         $notificationsFilterDto = NotificationsFilterCriteriaDto::instantiateFromRequest($request);
         $notifications = $this->service->getAllNotifications($notificationsFilterDto);
@@ -175,7 +29,7 @@ class NotificationsController extends EscolaLmsBaseController
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
 
-    public function user(NotificationsUserRequest $request)
+    public function user(NotificationsUserRequest $request): JsonResponse
     {
         $notificationsFilterDto = NotificationsFilterCriteriaDto::instantiateFromRequest($request);
         $notifications = $this->service->getUserNotifications($request->getUser(), $notificationsFilterDto);
@@ -183,113 +37,12 @@ class NotificationsController extends EscolaLmsBaseController
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
 
-    /**
-     * @OA\Get(
-     *      path="/api/notifications/events",
-     *      summary="Get list of events for which notifications exist",
-     *      tags={"Notifications"},
-     *      description="Get list of events for which notifications exist",
-     *      @OA\Response(
-     *          response=200,
-     *          description="successful operation",
-     *          @OA\MediaType(
-     *              mediaType="application/json"
-     *          ),
-     *          @OA\Schema(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="success",
-     *                  type="boolean"
-     *              ),
-     *              @OA\Property(
-     *                  property="data",
-     *                  type="array",
-     *                  @OA\Items(@OA\Schema(type="string"))
-     *              ),
-     *              @OA\Property(
-     *                  property="message",
-     *                  type="string"
-     *              )
-     *          )
-     *      )
-     * )
-     */
-
-    /**
-     * @OA\Get(
-     *      path="/api/admin/notifications/events",
-     *      summary="Get list of events for which notifications exist",
-     *      tags={"Notifications Admin"},
-     *      description="Get list of events for which notifications exist",
-     *      @OA\Response(
-     *          response=200,
-     *          description="successful operation",
-     *          @OA\MediaType(
-     *              mediaType="application/json"
-     *          ),
-     *          @OA\Schema(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="success",
-     *                  type="boolean"
-     *              ),
-     *              @OA\Property(
-     *                  property="data",
-     *                  type="array",
-     *                  @OA\Items(@OA\Schema(type="string"))
-     *              ),
-     *              @OA\Property(
-     *                  property="message",
-     *                  type="string"
-     *              )
-     *          )
-     *      )
-     * )
-     */
-    public function events(NotificationEventsRequest $request)
+    public function events(NotificationEventsRequest $request): JsonResponse
     {
         return $this->sendResponse($this->service->getEvents());
     }
 
-    /**
-     * @OA\Post(
-     *      path="/api/notifications/{notification}/read",
-     *      summary="Mark notification as read",
-     *      tags={"Notifications"},
-     *      description="Mark notification as read",
-     *      @OA\Parameter(
-     *          name="notification",
-     *          description="Notification uuid / id",
-     *          required=true,
-     *          in="path",
-     *          @OA\Schema(type="string"),
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="successful operation",
-     *          @OA\MediaType(
-     *              mediaType="application/json"
-     *          ),
-     *          @OA\Schema(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="success",
-     *                  type="boolean"
-     *              ),
-     *              @OA\Property(
-     *                  property="data",
-     *                  type="object",
-     *                  @OA\Schema(ref="#/components/schemas/Notification"),
-     *              ),
-     *              @OA\Property(
-     *                  property="message",
-     *                  type="string"
-     *              )
-     *          )
-     *      )
-     * )
-     */
-    public function read(NotificationReadRequest $request)
+    public function read(NotificationReadRequest $request): JsonResponse
     {
         $notification = $request->getNotification();
         $notification->markAsRead();
