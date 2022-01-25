@@ -3,6 +3,7 @@
 namespace EscolaLms\Notifications\Http\Controllers;
 
 use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
+use EscolaLms\Notifications\Http\Controllers\Swagger\NotificationsApiSwagger;
 use EscolaLms\Notifications\Http\Requests\NotificationEventsRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationReadRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsRequest;

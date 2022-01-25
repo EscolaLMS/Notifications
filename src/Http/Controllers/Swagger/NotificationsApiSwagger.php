@@ -1,6 +1,6 @@
 <?php
 
-namespace EscolaLms\Notifications\Http\Controllers;
+namespace EscolaLms\Notifications\Http\Controllers\Swagger;
 
 use EscolaLms\Notifications\Http\Requests\NotificationEventsRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationReadRequest;
