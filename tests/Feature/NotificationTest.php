@@ -61,4 +61,17 @@ class NotificationTest extends TestCase
         $this->assertEquals($this->friend->getKey(), $database_notification->data['friend']->getKey());
         $this->assertEquals('foo', $database_notification->data['string']);
     }
+
+    public function test_should_not_save_database_notification()
+    {
+        $user = new User();
+        $user->email = 'test@test.com';
+
+        event(new TestEvent($user, $this->friend, 'foo'));
+
+        $this->assertDatabaseMissing('notifications', [
+            'event' => TestEvent::class
+        ]);
+        $this->assertDatabaseCount('notifications', 0);
+    }
 }

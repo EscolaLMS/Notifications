@@ -8,7 +8,6 @@ use ReflectionClass;
 
 class NotifiableEventListener
 {
-
     public function handle($event)
     {
         $data = $this->getDataFromEvent($event);
@@ -17,7 +16,10 @@ class NotifiableEventListener
             /** @var User $user */
             $user = $data[$userKey];
             unset($data[$userKey]);
-            $user->notify(new EventNotification($event, $data));
+
+            if ($user->getKey()) {
+                $user->notify(new EventNotification($event, $data));
+            }
         }
     }
 
