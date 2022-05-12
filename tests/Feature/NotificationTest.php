@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace EscolaLms\Notifications\Tests\Feature;
 
 use EscolaLms\Core\Models\User;
 use EscolaLms\Core\Tests\CreatesUsers;

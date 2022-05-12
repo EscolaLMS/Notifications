@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Api;
+namespace EscolaLms\Notifications\Tests\API;
 
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Notifications\Database\Seeders\NotificationsPermissionsSeeder;
