@@ -8,3 +8,4 @@ composer.lock
 src/oa_version.php
 tags
 vendor/
+.DS_Store

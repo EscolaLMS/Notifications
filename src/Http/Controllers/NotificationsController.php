@@ -33,7 +33,7 @@ class NotificationsController extends EscolaLmsBaseController implements Notific
     public function user(NotificationsUserRequest $request): JsonResponse
     {
         $notificationsFilterDto = NotificationsFilterCriteriaDto::instantiateFromRequest($request);
-        $notifications = $this->service->getUserNotifications($request->getUser(), $notificationsFilterDto);
+        $notifications = $this->service->getUserNotifications($request->getUserFromRoute(), $notificationsFilterDto);
 
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }

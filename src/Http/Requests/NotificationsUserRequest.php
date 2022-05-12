@@ -34,7 +34,7 @@ class NotificationsUserRequest extends FormRequest
         ];
     }
 
-    public function getUser(): User
+    public function getUserFromRoute(): User
     {
         return User::find($this->input('user'));
     }
@@ -46,7 +46,7 @@ class NotificationsUserRequest extends FormRequest
 
     public function getIncludeRead(): bool
     {
-        return $this->input('include_read', ($this->user()->getKey() !== $this->getUser()->getKey()));
+        return $this->input('include_read', ($this->user()->getKey() !== $this->getUserFromRoute()->getKey()));
     }
 
     public function getDateFrom(): ?string
