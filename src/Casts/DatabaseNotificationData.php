@@ -3,7 +3,9 @@
 namespace EscolaLms\Notifications\Casts;
 
 use EscolaLms\Notifications\Models\DatabaseNotification;
+use Exception;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Contracts\Database\ModelIdentifier;
 use Illuminate\Queue\SerializesAndRestoresModelIdentifiers;
 
 class DatabaseNotificationData implements CastsAttributes
@@ -24,7 +26,22 @@ class DatabaseNotificationData implements CastsAttributes
                 $unserialized = $attribute;
             }
 
-            $data[$key] = $this->getRestoredPropertyValue($unserialized);
+            /** 
+             * If we have notifications that contain references to Models that no longer exist in database 
+             * (or Model classes that no longer exist in codebase), 
+             * this will return null instead of throwing errors.
+             * */
+            if ($unserialized instanceof ModelIdentifier) {
+                if ($unserialized->class && class_exists($unserialized->class)) {
+                    try {
+                        $data[$key] = $this->getRestoredPropertyValue($unserialized);
+                    } catch (\Throwable $th) {
+                        $data[$key] = null;
+                    }
+                } else {
+                    $data[$key] = null;
+                }
+            }
         }
 
         return $data;
