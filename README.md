@@ -11,20 +11,18 @@ Notifications package
 
 ## What does it do
 
-This package is used for creating Notification with editable Templates.
+This package is used for logging and broadcasting notifications for all `EscolaLms` packages events.
 
-## Installing
+## Installation
 
 - `composer require escolalms/notifications`
 - `php artisan migrate`
 - `php artisan db:seed --class="EscolaLms\Notifications\Database\Seeders\NotificationsPermissionsSeeder"`
 
-Notifications must implement `EscolaLms\Notifications\Core\NotificationContract`.
+## Usage
 
-Notifications must be registered using `EscolaLms\Notifications\Facades\EscolaLmsNotifications` Facade, by calling `registerNotification` method.
-
-To create default template for notifications, package should create NotificationSeeder which calls `createDefaultTemplates` method of the Facade.
-
+All events emitted by EscolaLms packages will be logged in database and can be listed through API (and Admin Panel).
+There is a configuration file in which you can define events which should be excluded from being stored.
 
 ## Endpoints
 
@@ -34,17 +32,32 @@ All the endpoints are defined in [![swagger](https://img.shields.io/badge/docume
 
 Run `./vendor/bin/phpunit --filter 'EscolaLms\\Notifications\\Tests'` to run tests. See [tests](tests) folder as it's quite good staring point as documentation appendix.
 
+Test details:
+[![codecov](https://codecov.io/gh/EscolaLMS/notifications/branch/main/graph/badge.svg?token=gBzpyNK8DQ)](https://codecov.io/gh/EscolaLMS/notifications)
+[![phpunit](https://github.com/EscolaLMS/notifications/actions/workflows/test.yml/badge.svg)](https://github.com/EscolaLMS/notifications/actions/workflows/test.yml)
 
 ### Admin panel
 
-**Left menu**
+#### **Left menu**
 
 ![Menu](docs/menu.png "Menu")
 
-**List of notifications**
+#### **List of notifications**
 
 ![List of notifications](docs/list.png "List of notifications")
 
 ## Permissions
 
 Permissions are defined in [seeder](vendor/escolalms/notifications/database/seeders/NotificationsPermissionsSeeder.php)
+
+## Events
+
+No Events are defined in this package.
+
+## Listeners
+
+- `EscolaLms\Notifications\Listeners\NotifiableEventListener` - this listener listens to all events in `EscolaLms` namespace
+
+## Roadmap. Todo. Troubleshooting
+
+- ???
