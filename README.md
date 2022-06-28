@@ -2,7 +2,7 @@
 
 Notifications package
 
-[![swagger](https://img.shields.io/badge/documentation-swagger-green)](https://escolalms.github.io/notifications/)
+[![swagger](https://img.shields.io/badge/documentation-swagger-green)](https://escolalms.github.io/Notifications/)
 [![codecov](https://codecov.io/gh/EscolaLMS/notifications/branch/main/graph/badge.svg?token=gBzpyNK8DQ)](https://codecov.io/gh/EscolaLMS/notifications)
 [![phpunit](https://github.com/EscolaLMS/notifications/actions/workflows/test.yml/badge.svg)](https://github.com/EscolaLMS/notifications/actions/workflows/test.yml)
 [![downloads](https://img.shields.io/packagist/dt/escolalms/notifications)](https://packagist.org/packages/escolalms/notifications)
@@ -26,7 +26,7 @@ There is a configuration file in which you can define events which should be exc
 
 ## Endpoints
 
-All the endpoints are defined in [![swagger](https://img.shields.io/badge/documentation-swagger-green)](https://escolalms.github.io/notifications/)
+All the endpoints are defined in [![swagger](https://img.shields.io/badge/documentation-swagger-green)](https://escolalms.github.io/Notifications/)
 
 ## Tests
 
