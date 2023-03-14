@@ -4,14 +4,21 @@ namespace EscolaLms\Notifications\Services\Contracts;
 
 use EscolaLms\Core\Models\User;
 use EscolaLms\Notifications\Dtos\NotificationsFilterCriteriaDto;
-use Illuminate\Pagination\LengthAwarePaginator;
+use EscolaLms\Notifications\Dtos\PageDto;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface DatabaseNotificationsServiceContract
 {
     public function getUserNotifications(
         User $user,
-        NotificationsFilterCriteriaDto $notificationsFilterDto
+        NotificationsFilterCriteriaDto $notificationsFilterDto,
+        PageDto $pageDto
     ): LengthAwarePaginator;
-    public function getAllNotifications(NotificationsFilterCriteriaDto $notificationsFilterDto): LengthAwarePaginator;
+
+    public function getAllNotifications(
+        NotificationsFilterCriteriaDto $notificationsFilterDto,
+        PageDto $pageDto
+    ): LengthAwarePaginator;
+
     public function getEvents(): array;
 }
