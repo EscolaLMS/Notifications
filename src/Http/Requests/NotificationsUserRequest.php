@@ -16,9 +16,9 @@ class NotificationsUserRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if ($this->user()->can(NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS) && $this->route('user')) {
+        if ($this->user() && $this->user()->can(NotificationsPermissionsEnum::READ_ALL_NOTIFICATIONS) && $this->route('user')) {
             $this->merge(['user' => $this->route('user')]);
-        } else {
+        } else if ($this->user()) {
             $this->merge(['user' => $this->user()->getKey()]);
         }
     }

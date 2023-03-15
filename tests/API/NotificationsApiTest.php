@@ -4,16 +4,20 @@ namespace EscolaLms\Notifications\Tests\API;
 
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Notifications\Database\Seeders\NotificationsPermissionsSeeder;
+use EscolaLms\Notifications\Models\DatabaseNotification;
+use EscolaLms\Core\Models\User;
 use EscolaLms\Notifications\Tests\Mocks\DifferentTestEvent;
 use EscolaLms\Notifications\Tests\Mocks\TestEvent;
 use EscolaLms\Notifications\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 
 class NotificationsApiTest extends TestCase
 {
     use DatabaseTransactions;
     use CreatesUsers;
+    use WithFaker;
 
     protected function setUp(): void
     {
@@ -215,5 +219,70 @@ class NotificationsApiTest extends TestCase
         $response->assertOk();
 
         $response->assertJsonCount(2, 'data');
+    }
+
+    public function test_user_pagination(): void
+    {
+        $user = $this->makeStudent();
+        $this->generateEvents($user, 25);
+
+        $this->actingAs($user, 'api')
+            ->getJson('/api/notifications?per_page=10')
+            ->assertOk()
+            ->assertJsonCount(10, 'data')
+            ->assertJson([
+                'meta' => [
+                    'per_page' => 10,
+                    'total' => 25
+                ]
+            ]);
+
+        $this->actingAs($user, 'api')
+            ->getJson('/api/notifications?per_page=10&page=3')
+            ->assertOk()
+            ->assertJsonCount(5, 'data')
+            ->assertJson([
+                'meta' => [
+                    'per_page' => 10,
+                    'total' => 25
+                ]
+            ]);
+    }
+
+    public function test_admin_pagination(): void
+    {
+        $this->generateEvents(null, 13);
+
+        $this->actingAs($this->makeAdmin(), 'api')
+            ->getJson('/api/admin/notifications?per_page=10')
+            ->assertOk()
+            ->assertJsonCount(10, 'data')
+            ->assertJson([
+                'meta' => [
+                    'per_page' => 10,
+                    'total' => 13
+                ]
+            ]);
+
+        $this->actingAs($this->makeAdmin(), 'api')
+            ->getJson('/api/admin/notifications?per_page=10&page=2')
+            ->assertOk()
+            ->assertJsonCount(3, 'data')
+            ->assertJson([
+                'meta' => [
+                    'per_page' => 10,
+                    'total' => 13
+                ]
+            ]);
+    }
+
+    private function generateEvents(?User $user = null, int $count = 5): void
+    {
+        $u1 = $user ?? $this->makeAdmin();
+        $u2 = $this->makeStudent();
+
+        for ($i = 0; $i < $count; $i++) {
+            event(new TestEvent($u1, $u2, $this->faker->word));
+        }
     }
 }
