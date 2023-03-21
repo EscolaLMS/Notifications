@@ -21,4 +21,6 @@ interface DatabaseNotificationsServiceContract
     ): LengthAwarePaginator;
 
     public function getEvents(): array;
+
+    public function markAsReadAll(User $user): void;
 }

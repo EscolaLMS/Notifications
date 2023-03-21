@@ -79,6 +79,18 @@ class NotificationsApiTest extends TestCase
         $response->assertForbidden();
     }
 
+    public function test_user_can_mark_all_his_notification_as_read(): void
+    {
+        $student = $this->makeStudent();
+        $this->generateEvents($student);
+
+        $this->actingAs($student, 'api')
+            ->postJson('api/notifications/read-all')
+            ->assertOk();
+
+        $student->notifications->each(fn ($notification) => $this->assertTrue($notification->read()));
+    }
+
     public function test_user_can_not_see_others_notifications()
     {
         $student = $this->makeStudent();

@@ -6,6 +6,7 @@ use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Notifications\Dtos\PageDto;
 use EscolaLms\Notifications\Http\Controllers\Swagger\NotificationsApiSwagger;
 use EscolaLms\Notifications\Http\Requests\NotificationEventsRequest;
+use EscolaLms\Notifications\Http\Requests\NotificationReadAllRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationReadRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsUserRequest;
@@ -53,5 +54,11 @@ class NotificationsController extends EscolaLmsBaseController implements Notific
         $notification = $request->getNotification();
         $notification->markAsRead();
         return $this->sendResponseForResource(NotificationResource::make($notification->refresh()));
+    }
+
+    public function readAll(NotificationReadAllRequest $request): JsonResponse
+    {
+        $this->service->markAsReadAll($request->user());
+        return $this->sendSuccess(__('All notifications marked as read'));
     }
 }

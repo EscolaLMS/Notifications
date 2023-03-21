@@ -48,6 +48,11 @@ class DatabaseNotificationsService implements DatabaseNotificationsServiceContra
             ->toArray();
     }
 
+    public function markAsReadAll(User $user): void
+    {
+        $user->unreadNotifications->each(fn ($notification) => $notification->markAsRead());
+    }
+
     private function applyCriteria(Builder $query, array $criteria): Builder
     {
         foreach ($criteria as $criterion) {
