@@ -3,6 +3,7 @@
 namespace EscolaLms\Notifications\Http\Controllers\Swagger;
 
 use EscolaLms\Notifications\Http\Requests\NotificationEventsRequest;
+use EscolaLms\Notifications\Http\Requests\NotificationReadAllRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationReadRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsRequest;
 use EscolaLms\Notifications\Http\Requests\NotificationsUserRequest;
@@ -280,4 +281,35 @@ interface NotificationsApiSwagger
      * )
      */
     public function read(NotificationReadRequest $request): JsonResponse;
+
+    /**
+     * @OA\Post(
+     *      path="/api/notifications/read-all",
+     *      summary="Mark all notifications as read",
+     *      tags={"Notifications"},
+     *      security={
+     *          {"passport": {}},
+     *      },
+     *      description="Mark all notifications as read",
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OA\MediaType(
+     *              mediaType="application/json"
+     *          ),
+     *          @OA\Schema(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="success",
+     *                  type="boolean"
+     *              ),
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string"
+     *              )
+     *          )
+     *      )
+     * )
+     */
+    public function readAll(NotificationReadAllRequest $request): JsonResponse;
 }
