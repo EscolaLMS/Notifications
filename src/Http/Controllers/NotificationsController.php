@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Notifications\Http\Controllers;
 
+use EscolaLms\Core\Dtos\OrderDto;
 use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Notifications\Dtos\PageDto;
 use EscolaLms\Notifications\Http\Controllers\Swagger\NotificationsApiSwagger;
@@ -28,8 +29,9 @@ class NotificationsController extends EscolaLmsBaseController implements Notific
     {
         $notificationsFilterDto = NotificationsFilterCriteriaDto::instantiateFromRequest($request);
         $pageDto = PageDto::instantiateFromRequest($request);
+        $orderDto = OrderDto::instantiateFromRequest($request);
 
-        $notifications = $this->service->getAllNotifications($notificationsFilterDto, $pageDto);
+        $notifications = $this->service->getAllNotifications($notificationsFilterDto, $pageDto, $orderDto);
 
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
@@ -38,8 +40,9 @@ class NotificationsController extends EscolaLmsBaseController implements Notific
     {
         $notificationsFilterDto = NotificationsFilterCriteriaDto::instantiateFromRequest($request);
         $pageDto = PageDto::instantiateFromRequest($request);
+        $orderDto = OrderDto::instantiateFromRequest($request);
 
-        $notifications = $this->service->getUserNotifications($request->getUserFromRoute(), $notificationsFilterDto, $pageDto);
+        $notifications = $this->service->getUserNotifications($request->getUserFromRoute(), $notificationsFilterDto, $pageDto, $orderDto);
 
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
