@@ -42,7 +42,7 @@ class NotificationsController extends EscolaLmsBaseController implements Notific
         $pageDto = PageDto::instantiateFromRequest($request);
         $orderDto = OrderDto::instantiateFromRequest($request);
 
-        $notifications = $this->service->getUserNotifications($request->getUserFromRoute(), $notificationsFilterDto, $pageDto);
+        $notifications = $this->service->getUserNotifications($request->getUserFromRoute(), $notificationsFilterDto, $pageDto, $orderDto);
 
         return $this->sendResponseForResource(NotificationResource::collection($notifications));
     }
