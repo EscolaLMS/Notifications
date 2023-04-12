@@ -162,25 +162,67 @@ class NotificationsApiTest extends TestCase
         $student = $this->makeStudent();
         $friend = $this->makeStudent();
 
-        event(new TestEvent($student, $friend, 'foo'));
-        event(new TestEvent($friend, $student, 'foo'));
         event(new DifferentTestEvent($student, 'bar'));
+        event(new TestEvent($friend, $student, 'foo'));
 
-        $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $notifications = DatabaseNotification::all();
+
+        $notifications->get(0)->update(['created_at' => now()->subDay()]);
+        $notifications->get(1)->update(['created_at' => now()->addDay()]);
+
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
             'order_by' => 'notifiable_id',
             'order' => 'ASC',
-        ])->assertOk();
+        ]);
+        $response->assertOk();
+        $this->assertTrue($response->json('data.0.id') === $notifications->get(0)->getKey());
+        $this->assertTrue($response->json('data.1.id') === $notifications->get(1)->getKey());
 
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+            'order_by' => 'notifiable_id',
+            'order' => 'DESC',
+        ]);
 
-        $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response->assertOk();
+        $this->assertTrue($response->json('data.0.id') === $notifications->get(1)->getKey());
+        $this->assertTrue($response->json('data.1.id') === $notifications->get(0)->getKey());
+
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+            'order_by' => 'event',
+            'order' => 'ASC',
+        ]);
+
+        $response->assertOk();
+        $this->assertTrue($response->json('data.0.id') === $notifications->get(0)->getKey());
+        $this->assertTrue($response->json('data.1.id') === $notifications->get(1)->getKey());
+
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
             'order_by' => 'event',
             'order' => 'DESC',
-        ])->assertOk();
+        ]);
 
-        $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response->assertOk();
+        $this->assertTrue($response->json('data.0.id') === $notifications->get(1)->getKey());
+        $this->assertTrue($response->json('data.1.id') === $notifications->get(0)->getKey());
+
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
             'order_by' => 'created_at',
             'order' => 'ASC',
-        ])->assertOk();
+        ]);
+
+        $response->assertOk();
+        $this->assertTrue($response->json('data.0.id') === $notifications->get(0)->getKey());
+        $this->assertTrue($response->json('data.1.id') === $notifications->get(1)->getKey());
+
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+            'order_by' => 'created_at',
+            'order' => 'DESC',
+        ]);
+
+        $response->assertOk();
+        $this->assertTrue($response->json('data.0.id') === $notifications->get(1)->getKey());
+        $this->assertTrue($response->json('data.1.id') === $notifications->get(0)->getKey());
+
     }
 
     public function test_admin_can_filter_notifications_by_event()
