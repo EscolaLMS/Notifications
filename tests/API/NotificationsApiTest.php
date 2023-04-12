@@ -174,8 +174,11 @@ class NotificationsApiTest extends TestCase
             'order_by' => 'notifiable_id',
             'order' => 'ASC',
         ]);
-        var_dump($response->json());
         $response->assertOk();
+        var_dump($response->json('data.0.id'));
+        var_dump($response->json('data.0.id'));
+        var_dump($notifications->get(0)->getKey());
+        var_dump($notifications->get(1)->getKey());
         $this->assertTrue($response->json('data.0.id') === $notifications->get(0)->getKey());
         $this->assertTrue($response->json('data.1.id') === $notifications->get(1)->getKey());
 
