@@ -19,6 +19,8 @@ class NotificationsRequest extends FormRequest
             'include_read' => ['sometimes', 'boolean'],
             'date_from' => ['sometimes', 'date'],
             'date_to' => ['sometimes', 'date'],
+            'order_by' => ['sometimes', 'string', 'in:created_at,notifiable_id,event'],
+            'order' => ['sometimes', 'string', 'in:ASC,DESC'],
         ];
     }
 

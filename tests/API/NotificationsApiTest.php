@@ -156,6 +156,33 @@ class NotificationsApiTest extends TestCase
         ]);
     }
 
+    public function test_admin_notification_list_with_sorts()
+    {
+        $admin = $this->makeAdmin();
+        $student = $this->makeStudent();
+        $friend = $this->makeStudent();
+
+        event(new TestEvent($student, $friend, 'foo'));
+        event(new TestEvent($friend, $student, 'foo'));
+        event(new DifferentTestEvent($student, 'bar'));
+
+        $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+            'order_by' => 'notifiable_id',
+            'order' => 'ASC',
+        ])->assertOk();
+
+
+        $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+            'order_by' => 'event',
+            'order' => 'DESC',
+        ])->assertOk();
+
+        $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+            'order_by' => 'created_at',
+            'order' => 'ASC',
+        ])->assertOk();
+    }
+
     public function test_admin_can_filter_notifications_by_event()
     {
         $admin = $this->makeAdmin();
