@@ -13,61 +13,6 @@ interface NotificationsApiSwagger
 {
     /**
      * @OA\Get(
-     *      path="/api/notifications",
-     *      summary="Get notifications",
-     *      tags={"Notifications"},
-     *      security={
-     *          {"passport": {}},
-     *      },
-     *      description="Get paginated list of notifications sent using `database` channel",
-     *      @OA\Parameter(
-     *          name="page",
-     *          description="Pagination Page Number",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="number",
-     *               default=1,
-     *          ),
-     *      ),
-     *      @OA\Parameter(
-     *          name="per_page",
-     *          description="Pagination Per Page",
-     *          required=false,
-     *          in="query",
-     *          @OA\Schema(
-     *              type="number",
-     *               default=15,
-     *          ),
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="successful operation",
-     *          @OA\MediaType(
-     *              mediaType="application/json"
-     *          ),
-     *          @OA\Schema(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="success",
-     *                  type="boolean"
-     *              ),
-     *              @OA\Property(
-     *                  property="data",
-     *                  type="array",
-     *                  @OA\Items(ref="#/components/schemas/Notification")
-     *              ),
-     *              @OA\Property(
-     *                  property="message",
-     *                  type="string"
-     *              )
-     *          )
-     *      )
-     * )
-     */
-
-    /**
-     * @OA\Get(
      *      path="/api/admin/notifications/all",
      *      summary="Get notifications",
      *      tags={"Notifications Admin"},
@@ -168,7 +113,42 @@ interface NotificationsApiSwagger
 
     /**
      * @OA\Get(
-     *      path="/api/notifications/events",
+     *      path="/api/notifications",
+     *      summary="Get list of events for which notifications exist",
+     *      tags={"Notifications"},
+     *      security={
+     *          {"passport": {}},
+     *      },
+     *      description="Get list of events for which notifications exist",
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OA\MediaType(
+     *              mediaType="application/json"
+     *          ),
+     *          @OA\Schema(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="success",
+     *                  type="boolean"
+     *              ),
+     *              @OA\Property(
+     *                  property="data",
+     *                  type="array",
+     *                  @OA\Items(@OA\Schema(type="string"))
+     *              ),
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string"
+     *              )
+     *          )
+     *      )
+     * )
+     */
+
+    /**
+     * @OA\Get(
+     *      path="/api/admin/notifications",
      *      summary="Get list of events for which notifications exist",
      *      tags={"Notifications"},
      *      security={
