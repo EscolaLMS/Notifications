@@ -68,7 +68,7 @@ interface NotificationsApiSwagger
 
     /**
      * @OA\Get(
-     *      path="/api/admin/notifications/{user}",
+     *      path="/api/admin/notifications/all",
      *      summary="Get notifications",
      *      tags={"Notifications Admin"},
      *      security={
