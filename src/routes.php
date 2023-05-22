@@ -12,6 +12,8 @@ Route::group(['prefix' => 'api/notifications'], function () {
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'api/admin/notifications'], function () {
     Route::get('/events', [NotificationsController::class, 'events']);
-    Route::get('/', [NotificationsController::class, 'index']);
+    Route::get('/', [NotificationsController::class, 'user']);
+    Route::get('/all', [NotificationsController::class, 'index']);
     Route::get('/{user}', [NotificationsController::class, 'user'])->where(['user' => '[0-9]+']);
+    Route::post('/read-all', [NotificationsController::class, 'readAll']);
 });

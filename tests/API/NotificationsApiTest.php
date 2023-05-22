@@ -171,7 +171,7 @@ class NotificationsApiTest extends TestCase
         $notificationTwo = DatabaseNotification::where('notifiable_id', $friend->getKey())->first();
         $notificationTwo->update(['created_at' => now()->addDay()]);
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'notifiable_id',
             'order' => 'ASC',
         ]);
@@ -180,7 +180,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationOne->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationTwo->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'notifiable_id',
             'order' => 'DESC',
         ]);
@@ -189,7 +189,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationTwo->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationOne->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'event',
             'order' => 'ASC',
         ]);
@@ -198,7 +198,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationOne->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationTwo->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'event',
             'order' => 'DESC',
         ]);
@@ -207,7 +207,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationTwo->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationOne->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'created_at',
             'order' => 'ASC',
         ]);
@@ -216,7 +216,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationOne->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationTwo->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'created_at',
             'order' => 'DESC',
         ]);
@@ -237,13 +237,13 @@ class NotificationsApiTest extends TestCase
         event(new TestEvent($friend, $student, 'foo'));
         event(new DifferentTestEvent($student, 'bar'));
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'event' => TestEvent::class,
         ]);
         $response->assertOk();
         $response->assertJsonCount(2, 'data');
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'event' => DifferentTestEvent::class,
         ]);
         $response->assertOk();
@@ -273,20 +273,20 @@ class NotificationsApiTest extends TestCase
         $response->assertOk();
         $response->assertJsonCount(1, 'data');
 
-        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/', [
+        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/all', [
             'date_from' => Carbon::now()->addDay()->toIso8601String(),
         ]);
         $response->assertOk();
 
         $response->assertJsonCount(0, 'data');
 
-        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/', [
+        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/all', [
             'date_to' => Carbon::now()->subDay()->toIso8601String(),
         ]);
         $response->assertOk();
         $response->assertJsonCount(0, 'data');
 
-        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/', [
+        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/all', [
             'date_from' => Carbon::now()->subDay()->toIso8601String(),
             'date_to' => Carbon::now()->addDay()->toIso8601String(),
         ]);
@@ -294,7 +294,7 @@ class NotificationsApiTest extends TestCase
 
         $response->assertJsonCount(3, 'data');
 
-        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/', [
+        $response = $this->actingAs($admin)->json('GET', '/api/admin/notifications/all', [
             'date_from' => Carbon::now()->subDay()->toIso8601String(),
             'date_to' => Carbon::now()->addDay()->toIso8601String(),
             'event' => TestEvent::class,
@@ -337,7 +337,7 @@ class NotificationsApiTest extends TestCase
         $this->generateEvents(null, 13);
 
         $this->actingAs($this->makeAdmin(), 'api')
-            ->getJson('/api/admin/notifications?per_page=10')
+            ->getJson('/api/admin/notifications/all?per_page=10')
             ->assertOk()
             ->assertJsonCount(10, 'data')
             ->assertJson([
@@ -348,7 +348,7 @@ class NotificationsApiTest extends TestCase
             ]);
 
         $this->actingAs($this->makeAdmin(), 'api')
-            ->getJson('/api/admin/notifications?per_page=10&page=2')
+            ->getJson('/api/admin/notifications/all?per_page=10&page=2')
             ->assertOk()
             ->assertJsonCount(3, 'data')
             ->assertJson([
