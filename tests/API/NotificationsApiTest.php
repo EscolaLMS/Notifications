@@ -171,7 +171,7 @@ class NotificationsApiTest extends TestCase
         $notificationTwo = DatabaseNotification::where('notifiable_id', $friend->getKey())->first();
         $notificationTwo->update(['created_at' => now()->addDay()]);
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'notifiable_id',
             'order' => 'ASC',
         ]);
@@ -180,7 +180,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationOne->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationTwo->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'notifiable_id',
             'order' => 'DESC',
         ]);
@@ -189,7 +189,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationTwo->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationOne->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'event',
             'order' => 'ASC',
         ]);
@@ -198,7 +198,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationOne->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationTwo->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'event',
             'order' => 'DESC',
         ]);
@@ -207,7 +207,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationTwo->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationOne->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'created_at',
             'order' => 'ASC',
         ]);
@@ -216,7 +216,7 @@ class NotificationsApiTest extends TestCase
         $this->assertTrue($response->json('data.0.id') === $notificationOne->getKey());
         $this->assertTrue($response->json('data.1.id') === $notificationTwo->getKey());
 
-        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications', [
+        $response = $this->actingAs($admin, 'api')->json('GET', '/api/admin/notifications/all', [
             'order_by' => 'created_at',
             'order' => 'DESC',
         ]);
