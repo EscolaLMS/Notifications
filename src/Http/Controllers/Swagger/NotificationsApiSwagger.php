@@ -150,7 +150,7 @@ interface NotificationsApiSwagger
      * @OA\Get(
      *      path="/api/admin/notifications",
      *      summary="Get list of events for which notifications exist",
-     *      tags={"Notifications"},
+     *      tags={"Notifications Admin"},
      *      security={
      *          {"passport": {}},
      *      },
@@ -221,6 +221,48 @@ interface NotificationsApiSwagger
 
     /**
      * @OA\Post(
+     *      path="/api/admin/notifications/{notification}/read",
+     *      summary="Mark notification as read",
+     *      tags={"Notifications Admin"},
+     *      security={
+     *          {"passport": {}},
+     *      },
+     *      description="Mark notification as read",
+     *      @OA\Parameter(
+     *          name="notification",
+     *          description="Notification uuid / id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(type="string"),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OA\MediaType(
+     *              mediaType="application/json"
+     *          ),
+     *          @OA\Schema(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="success",
+     *                  type="boolean"
+     *              ),
+     *              @OA\Property(
+     *                  property="data",
+     *                  type="object",
+     *                  @OA\Schema(ref="#/components/schemas/Notification"),
+     *              ),
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string"
+     *              )
+     *          )
+     *      )
+     * )
+     */
+
+    /**
+     * @OA\Post(
      *      path="/api/notifications/{notification}/read",
      *      summary="Mark notification as read",
      *      tags={"Notifications"},
@@ -267,6 +309,36 @@ interface NotificationsApiSwagger
      *      path="/api/notifications/read-all",
      *      summary="Mark all notifications as read",
      *      tags={"Notifications"},
+     *      security={
+     *          {"passport": {}},
+     *      },
+     *      description="Mark all notifications as read",
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OA\MediaType(
+     *              mediaType="application/json"
+     *          ),
+     *          @OA\Schema(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="success",
+     *                  type="boolean"
+     *              ),
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string"
+     *              )
+     *          )
+     *      )
+     * )
+     */
+
+    /**
+     * @OA\Post(
+     *      path="/api/admin/notifications/read-all",
+     *      summary="Mark all notifications as read",
+     *      tags={"Notifications Admin"},
      *      security={
      *          {"passport": {}},
      *      },
