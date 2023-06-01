@@ -120,7 +120,7 @@
         "/api/admin/notifications": {
             "get": {
                 "tags": [
-                    "Notifications"
+                    "Notifications Admin"
                 ],
                 "summary": "Get list of events for which notifications exist",
                 "description": "Get list of events for which notifications exist",
@@ -148,6 +148,39 @@
                 "summary": "Get list of events for which notifications exist",
                 "description": "Get list of events for which notifications exist",
                 "operationId": "1897bdfd2176566f387ddd0acdff8264",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/notifications/{notification}/read": {
+            "post": {
+                "tags": [
+                    "Notifications Admin"
+                ],
+                "summary": "Mark notification as read",
+                "description": "Mark notification as read",
+                "parameters": [
+                    {
+                        "name": "notification",
+                        "in": "path",
+                        "description": "Notification uuid / id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
@@ -204,7 +237,29 @@
                 ],
                 "summary": "Mark all notifications as read",
                 "description": "Mark all notifications as read",
-                "operationId": "fa5fa2e8579dc71a8d5a09c0564e3e03",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/notifications/read-all": {
+            "post": {
+                "tags": [
+                    "Notifications Admin"
+                ],
+                "summary": "Mark all notifications as read",
+                "description": "Mark all notifications as read",
+                "operationId": "c9748677ec5346b9ecbb5479c8af44f8",
                 "responses": {
                     "200": {
                         "description": "successful operation",
