@@ -120,6 +120,80 @@ interface NotificationsApiSwagger
      *          {"passport": {}},
      *      },
      *      description="Get list of events for which notifications exist",
+     *      @OA\Parameter(
+     *          name="page",
+     *          description="Pagination Page Number",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="number",
+     *               default=1,
+     *          ),
+     *      ),
+     *      @OA\Parameter(
+     *          name="per_page",
+     *          description="Pagination Per Page",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="number",
+     *               default=15,
+     *          ),
+     *      ),
+     *      @OA\Parameter(
+     *          name="event",
+     *          description="Event class filter",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="string",
+     *          ),
+     *      ),
+     *      @OA\Parameter(
+     *          name="include_read",
+     *          description="Include read notifications",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="boolean",
+     *          ),
+     *      ),
+     *     @OA\Parameter(
+     *          name="date_from",
+     *          description="From date filter",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="date",
+     *          ),
+     *      ),
+     *     @OA\Parameter(
+     *          name="date_to",
+     *          description="To date filter",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="date",
+     *          ),
+     *      ),
+     *     @OA\Parameter(
+     *          name="order_by",
+     *          description="Order by",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              enum={"created_at", "notifiable_id", "event"},
+     *          ),
+     *      ),
+     *     @OA\Parameter(
+     *          name="order",
+     *          description="Order",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              enum={"ASC", "DESC"},
+     *          ),
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="successful operation",

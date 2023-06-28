@@ -28,8 +28,11 @@ class DatabaseNotificationsService implements DatabaseNotificationsServiceContra
             ->whereNotIn('event', config('escolalms_notifications.except_events'))->getQuery();
         $query = $this->applyCriteria($query, $notificationsFilterDto->toArray());
         if ($orderDto->getOrderBy()) {
-            $query->orderBy($orderDto->getOrderBy(), $orderDto->getOrder() ?? 'asc');
+            $query
+                ->reorder()
+                ->orderBy($orderDto->getOrderBy(), $orderDto->getOrder() ?? 'asc');
         }
+
         return $query->paginate($pageDto->getPerPage());
     }
 
