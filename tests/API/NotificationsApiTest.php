@@ -332,6 +332,31 @@ class NotificationsApiTest extends TestCase
             ]);
     }
 
+    public function test_user_notifications_sorting(): void
+    {
+        $user = $this->makeStudent();
+        $this->generateEvents($user, 10);
+
+        $notifications = DatabaseNotification::where('notifiable_id', $user->getKey())->get();
+        $first = $notifications->first();
+        $first->update(['created_at' => now()->addSecond()]);
+
+        $last = $notifications->last();
+        $last->update(['created_at' => now()->subDays(2)]);
+
+        $this->actingAs($user, 'api')
+            ->getJson('/api/notifications?order_by=created_at')
+            ->assertOk()
+            ->assertJsonCount(10, 'data')
+            ->assertJsonPath('data.0.id', $last->getKey());
+
+        $this->actingAs($user, 'api')
+            ->getJson('/api/notifications?order_by=created_at&order=DESC')
+            ->assertOk()
+            ->assertJsonCount(10, 'data')
+            ->assertJsonPath('data.0.id', $first->getKey());
+    }
+
     public function test_admin_pagination(): void
     {
         $this->generateEvents(null, 13);
